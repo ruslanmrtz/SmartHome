@@ -652,6 +652,14 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
+  <!-- История запросов -->
+  <aside id="history-sidebar" class="fixed left-0 top-0 h-full w-64 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-r-2xl shadow-lg p-4 z-50 overflow-y-auto transition-transform -translate-x-full md:translate-x-0">
+    <h2 class="text-xl font-semibold mb-4">История запросов</h2>
+    <ul id="history-list" class="space-y-2">
+      <!-- Записи истории будут добавляться сюда -->
+      <li class="text-gray-500 text-sm italic">История пуста</li>
+    </ul>
+  </aside>
 
   <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6">
     <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
@@ -771,7 +779,7 @@
             <div class="tv-container">
                 <div class="tv tv-off">
                     <div class="tv-frame"></div>
-                    <img src="https://cdn.maximonline.ru/91/26/c4/9126c445ee6e097754b5fdf471e47874/416x257_0xac120005_2938080411529046295.gif" alt="TV Screen" class="tv-screen">
+                    <img src="https://cdn.maximonline.ru/91/26/c4/9126c445ee6e097754b5fdf471e47874/416x257_0xac120005_2938080411529046295.gif  " alt="TV Screen" class="tv-screen">
                     <div class="screen-text flex items-center justify-center text-sm font-medium h-full">ТВ — выкл.</div>
                 </div>
                 <div class="tv-stand">
@@ -802,6 +810,13 @@
       </div>
     </main>
   </div>
+
+  <!-- Кнопка для открытия истории -->
+  <button id="toggle-history" class="fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-full shadow-lg z-40">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+    </svg>
+  </button>
 
   <script>
     const $ = (sel) => document.querySelector(sel);
@@ -879,6 +894,56 @@
       frequencyBar.style.width = '0%';
     }
 
+    // --- Новая логика для истории запросов ---
+    const historyList = $('#history-list');
+    const toggleHistoryBtn = $('#toggle-history');
+    const historySidebar = $('#history-sidebar');
+
+    // Загрузка истории из localStorage
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('smartHomeHistory') || '[]');
+        renderHistory(history);
+        return history;
+    }
+
+    // Сохранение истории в localStorage
+    function saveHistory(history) {
+        localStorage.setItem('smartHomeHistory', JSON.stringify(history));
+    }
+
+    // Отображение истории
+    function renderHistory(history) {
+        if (history.length === 0) {
+            historyList.innerHTML = '<li class="text-gray-500 text-sm italic">История пуста</li>';
+            return;
+        }
+        historyList.innerHTML = '';
+        history.slice().reverse().forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'p-2 bg-gray-100 dark:bg-gray-700 rounded text-sm break-words';
+            li.textContent = `${item.timestamp}: ${item.command}`;
+            historyList.appendChild(li);
+        });
+    }
+
+    // Добавление новой команды в историю
+    function addToHistory(command) {
+        const history = loadHistory();
+        const now = new Date();
+        const timestamp = now.toLocaleTimeString('ru-RU');
+        history.push({ command, timestamp });
+        // Ограничиваем историю 20 элементами
+        if (history.length > 20) history.shift();
+        saveHistory(history);
+        renderHistory(history);
+    }
+
+    // Переключение видимости боковой панели
+    toggleHistoryBtn.addEventListener('click', () => {
+        historySidebar.classList.toggle('-translate-x-full');
+    });
+
+    // --- Обновленная логика кнопки микрофона ---
     if (micButton) {
         micButton.addEventListener('click', async () => {
             if (!isListening) {
@@ -923,6 +988,8 @@
 
                 // Имитация обработки команды
                 setTimeout(() => {
+                    const mockCommand = "Включить свет и ТВ"; // Имитация распознанной команды
+                    addToHistory(mockCommand); // Добавляем команду в историю
                     voiceStatus.textContent = 'Команда выполнена';
                     setTimeout(() => {
                         voiceStatus.textContent = '';
@@ -937,7 +1004,7 @@
         });
     }
 
-    // Остальная логика вашего приложения (как в оригинале)
+    // --- Обновленная логика кнопок ---
     const btnCurtains = $('#btn-curtains');
     const btnLights = $('#btn-lights');
     const btnTv = $('#btn-tv');
@@ -1000,6 +1067,7 @@
             timeDisplay.style.opacity = "1";
             clockInterval = setInterval(updateClock, 1000);
             statusClock.textContent = `Часы: Работают`;
+            addToHistory("Часы включены"); // Добавляем в историю
         } else {
             // Выключаем часы
             const btnClock = $('#btn-clock');
@@ -1007,6 +1075,7 @@
             timeDisplay.style.opacity = "0.3";
             clearInterval(clockInterval);
             statusClock.textContent = `Часы: Выключены`;
+            addToHistory("Часы выключены"); // Добавляем в историю
         }
     }
 
@@ -1073,6 +1142,7 @@
 
         playSound(curtainsOpen ? '/sounds/curtain-open.mp3' : '/sounds/curtain-close.mp3');
         updateUI();
+        addToHistory(curtainsOpen ? "Шторы открыты" : "Шторы закрыты"); // Добавляем в историю
       });
     }
 
@@ -1097,6 +1167,7 @@
 
         playSound('/sounds/switch.mp3');
         updateUI();
+        addToHistory(lightsOn ? "Свет включён" : "Свет выключен"); // Добавляем в историю
       });
     }
 
@@ -1105,6 +1176,7 @@
         tvOn = !tvOn;
         playSound('/sounds/tv-toggle.mp3');
         updateUI();
+        addToHistory(tvOn ? "ТВ включён" : "ТВ выключен"); // Добавляем в историю
       });
     }
 
@@ -1133,6 +1205,7 @@
 
         playSound('/sounds/morning.mp3');
         updateUI();
+        addToHistory("Утренний режим активирован"); // Добавляем в историю
       });
     }
 
@@ -1152,6 +1225,7 @@
 
         playSound('/sounds/evening.mp3');
         updateUI();
+        addToHistory("Вечерний режим активирован"); // Добавляем в историю
       });
     }
 
@@ -1161,6 +1235,9 @@
 
     // Изначально шторы открыты
     updateUI();
+
+    // Инициализация истории
+    loadHistory();
   </script>
 </body>
 </html>
