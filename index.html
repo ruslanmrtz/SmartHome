@@ -546,6 +546,59 @@
       letter-spacing: 1px;
     }
 
+    /* Стили для вкладок */
+    .tab-buttons {
+      display: flex;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 1rem;
+    }
+    .tab-button {
+      flex: 1;
+      padding: 0.5rem;
+      background-color: #f3f4f6;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .tab-button.active {
+      background-color: white;
+      font-weight: 600;
+      border-bottom: 2px solid #3b82f6;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Стили для кнопки микрофона */
+    .mic-button {
+      width: 100px;
+      height: 100px;
+      background-color: #e5e7eb;
+      border: 2px solid #d1d5db;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin: 2rem auto;
+    }
+    .mic-button:hover {
+      background-color: #d1d5db;
+    }
+    .mic-button:active, .mic-button.listening {
+      background-color: #9ca3af;
+      transform: scale(0.98);
+    }
+    .mic-icon {
+      width: 40px;
+      height: 40px;
+      fill: #4b5563;
+    }
+
     @media (max-width: 768px) {
       .room {
         height: 360px;
@@ -559,34 +612,52 @@
     <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
       <h2 class="text-xl font-semibold mb-3">Smart Home Controls</h2>
 
-      <div class="space-y-3">
-        <button id="btn-curtains" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
-          Закрыть шторы
-        </button>
+      <!-- Вкладки -->
+      <div class="tab-buttons">
+        <button class="tab-button active" data-tab="buttons">Кнопки</button>
+        <button class="tab-button" data-tab="voice">Голосовой ввод</button>
+      </div>
 
-        <button id="btn-lights" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
-          Включить свет
-        </button>
-
-        <button id="btn-tv" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
-          Включить ТВ
-        </button>
-
-        <!-- Кнопка для выключения часов -->
-        <button id="btn-clock" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
-          Выключить часы
-        </button>
-
-        <div class="flex gap-2 mt-2">
-          <button id="btn-morning" class="flex-1 py-2 rounded-lg bg-yellow-400 hover:opacity-90">
-            Утро
+      <!-- Содержимое вкладок -->
+      <div class="tab-content active" id="tab-buttons-content">
+        <div class="space-y-3">
+          <button id="btn-curtains" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+            Закрыть шторы
           </button>
-          <button id="btn-evening" class="flex-1 py-2 rounded-lg bg-indigo-600 text-white hover:opacity-90">
-            Вечер
+
+          <button id="btn-lights" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+            Включить свет
           </button>
+
+          <button id="btn-tv" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+            Включить ТВ
+          </button>
+
+          <!-- Кнопка для выключения часов -->
+          <button id="btn-clock" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+            Выключить часы
+          </button>
+
+          <div class="flex gap-2 mt-2">
+            <button id="btn-morning" class="flex-1 py-2 rounded-lg bg-yellow-400 hover:opacity-90">
+              Утро
+            </button>
+            <button id="btn-evening" class="flex-1 py-2 rounded-lg bg-indigo-600 text-white hover:opacity-90">
+              Вечер
+            </button>
+          </div>
         </div>
+      </div>
 
-      
+      <div class="tab-content" id="tab-voice-content">
+        <div class="flex flex-col items-center">
+          <div id="mic-button" class="mic-button">
+            <svg class="mic-icon" viewBox="0 0 24 24">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.42 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.3 6-6.72h-1.7z"/>
+            </svg>
+          </div>
+          <p class="text-gray-500 text-sm mt-2">Нажмите и говорите</p>
+        </div>
       </div>
     </aside>
 
@@ -686,6 +757,56 @@
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => document.querySelectorAll(sel);
 
+    // Логика переключения вкладок
+    const tabButtons = $$('.tab-button');
+    const tabContents = $$('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tabName = button.getAttribute('data-tab');
+        
+        // Убираем активный класс у всех кнопок и контентов
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Добавляем активный класс текущей кнопке и контенту
+        button.classList.add('active');
+        $(`#tab-${tabName}-content`).classList.add('active');
+      });
+    });
+
+    // Логика кнопки микрофона
+    const micButton = $('#mic-button');
+    let isListening = false;
+
+    if (micButton) {
+        micButton.addEventListener('mousedown', () => {
+            isListening = true;
+            micButton.classList.add('listening');
+            console.log("Начало прослушивания...");
+            // Здесь будет логика для запуска распознавания речи
+        });
+
+        micButton.addEventListener('mouseup', () => {
+            if (isListening) {
+                isListening = false;
+                micButton.classList.remove('listening');
+                console.log("Окончание прослушивания...");
+                // Здесь будет логика для остановки распознавания речи и обработки команды
+            }
+        });
+
+        // На случай, если пользователь отведет мышь за пределы кнопки
+        micButton.addEventListener('mouseleave', () => {
+            if (isListening) {
+                isListening = false;
+                micButton.classList.remove('listening');
+                console.log("Прослушивание отменено (мышь ушла).");
+            }
+        });
+    }
+
+    // Остальная логика вашего приложения (как в оригинале)
     const btnCurtains = $('#btn-curtains');
     const btnLights = $('#btn-lights');
     const btnTv = $('#btn-tv');
@@ -743,13 +864,15 @@
         clockOn = !clockOn;
         if (clockOn) {
             // Включаем часы
-            btnClock.textContent = 'Выключить часы';
+            const btnClock = $('#btn-clock');
+            if (btnClock) btnClock.textContent = 'Выключить часы';
             timeDisplay.style.opacity = "1";
             clockInterval = setInterval(updateClock, 1000);
             statusClock.textContent = `Часы: Работают`;
         } else {
             // Выключаем часы
-            btnClock.textContent = 'Включить часы';
+            const btnClock = $('#btn-clock');
+            if (btnClock) btnClock.textContent = 'Включить часы';
             timeDisplay.style.opacity = "0.3";
             clearInterval(clockInterval);
             statusClock.textContent = `Часы: Выключены`;
@@ -757,14 +880,18 @@
     }
 
     function updateUI() {
-      btnCurtains.textContent = curtainsOpen ? 'Закрыть шторы' : 'Открыть шторы';
-      btnLights.textContent = lightsOn ? 'Выключить свет' : 'Включить свет';
-      btnTv.textContent = tvOn ? 'Выключить ТВ' : 'Включить ТВ';
+      const btnCurtains = $('#btn-curtains');
+      const btnLights = $('#btn-lights');
+      const btnTv = $('#btn-tv');
+      
+      if (btnCurtains) btnCurtains.textContent = curtainsOpen ? 'Закрыть шторы' : 'Открыть шторы';
+      if (btnLights) btnLights.textContent = lightsOn ? 'Выключить свет' : 'Включить свет';
+      if (btnTv) btnTv.textContent = tvOn ? 'Выключить ТВ' : 'Включить ТВ';
       // Состояние часов обновляется в toggleClock
 
       curtainLeft.classList.toggle('open-left', curtainsOpen);
       curtainRight.classList.toggle('open-right', curtainsOpen);
-      sun.style.opacity = curtainsOpen ? '1' : '0.3';
+      if (sun) sun.style.opacity = curtainsOpen ? '1' : '0.3';
 
       // Управление люстрой
       chandelierBulbs.forEach(bulb => {
@@ -778,15 +905,17 @@
       tv.classList.toggle('tv-on', tvOn);
       tv.classList.toggle('tv-off', !tvOn);
       const screenText = $('.tv .screen-text');
-      if (tvOn) {
-        screenText.textContent = '';
-      } else {
-        screenText.textContent = 'ТВ — выкл.';
+      if (screenText) {
+          if (tvOn) {
+            screenText.textContent = '';
+          } else {
+            screenText.textContent = 'ТВ — выкл.';
+          }
       }
 
-      statusCurtains.textContent = `Шторы: ${curtainsOpen ? 'Открыты' : 'Закрыты'}`;
-      statusLights.textContent = `Свет: ${lightsOn ? 'Включён' : 'Выключен'}`;
-      statusTv.textContent = `ТВ: ${tvOn ? 'Вкл.' : 'Выкл.'}`;
+      if (statusCurtains) statusCurtains.textContent = `Шторы: ${curtainsOpen ? 'Открыты' : 'Закрыты'}`;
+      if (statusLights) statusLights.textContent = `Свет: ${lightsOn ? 'Включён' : 'Выключен'}`;
+      if (statusTv) statusTv.textContent = `ТВ: ${tvOn ? 'Вкл.' : 'Выкл.'}`;
       // Статус часов обновляется в toggleClock
     }
 
@@ -797,13 +926,17 @@
         
         if (!curtainsOpen) {
           document.body.classList.add('night');
-          room.classList.remove('bg-[#eaf2ff]', 'text-black');
-          room.classList.add('bg-[#0b1320]', 'text-white');
+          if (room) {
+              room.classList.remove('bg-[#eaf2ff]', 'text-black');
+              room.classList.add('bg-[#0b1320]', 'text-white');
+          }
         } else {
           if (!lightsOn) {
             document.body.classList.remove('night');
-            room.classList.remove('bg-[#0b1320]', 'text-white');
-            room.classList.add('bg-[#eaf2ff]', 'text-black');
+            if (room) {
+                room.classList.remove('bg-[#0b1320]', 'text-white');
+                room.classList.add('bg-[#eaf2ff]', 'text-black');
+            }
           }
         }
         
@@ -818,13 +951,17 @@
         
         if (lightsOn) {
           document.body.classList.remove('night');
-          room.classList.remove('bg-[#0b1320]', 'text-white');
-          room.classList.add('bg-[#eaf2ff]', 'text-black');
+          if (room) {
+              room.classList.remove('bg-[#0b1320]', 'text-white');
+              room.classList.add('bg-[#eaf2ff]', 'text-black');
+          }
         } 
         else if (!curtainsOpen) {
            document.body.classList.add('night');
-           room.classList.remove('bg-[#eaf2ff]', 'text-black');
-           room.classList.add('bg-[#0b1320]', 'text-white');
+           if (room) {
+               room.classList.remove('bg-[#eaf2ff]', 'text-black');
+               room.classList.add('bg-[#0b1320]', 'text-white');
+           }
         }
         
         playSound('/sounds/switch.mp3');
@@ -858,8 +995,10 @@
         if (!clockOn) toggleClock();
         
         document.body.classList.remove('night');
-        room.classList.remove('bg-[#0b1320]', 'text-white');
-        room.classList.add('bg-[#eaf2ff]', 'text-black');
+        if (room) {
+            room.classList.remove('bg-[#0b1320]', 'text-white');
+            room.classList.add('bg-[#eaf2ff]', 'text-black');
+        }
         
         playSound('/sounds/morning.mp3');
         updateUI();
@@ -875,8 +1014,10 @@
         if (!clockOn) toggleClock();
         
         document.body.classList.add('night');
-        room.classList.remove('bg-[#eaf2ff]', 'text-black');
-        room.classList.add('bg-[#0b1320]', 'text-white');
+        if (room) {
+            room.classList.remove('bg-[#eaf2ff]', 'text-black');
+            room.classList.add('bg-[#0b1320]', 'text-white');
+        }
         
         playSound('/sounds/evening.mp3');
         updateUI();
