@@ -13,7 +13,6 @@
     body.night {
       background: #0b1220;
     }
-
     .room {
       position: relative;
       z-index: 0;
@@ -23,7 +22,6 @@
       z-index: 5;
       overflow: hidden;
     }
-
     /* Городской пейзаж */
     .city-scape {
       position: absolute;
@@ -34,7 +32,6 @@
       background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
       z-index: 0;
     }
-
     /* Солнце */
     .sun {
       position: absolute;
@@ -48,7 +45,6 @@
       z-index: 2;
       transition: opacity 1s ease;
     }
-
     /* Здания */
     .building {
       position: absolute;
@@ -56,35 +52,30 @@
       background: #888;
       border: 1px solid #666;
     }
-
     .building-1 {
       left: 10%;
       width: 60px;
       height: 100px;
       background: linear-gradient(to right, #777, #999);
     }
-
     .building-2 {
       left: 25%;
       width: 80px;
       height: 140px;
       background: linear-gradient(to right, #666, #888);
     }
-
     .building-3 {
       left: 50%;
       width: 50px;
       height: 80px;
       background: linear-gradient(to right, #888, #aaa);
     }
-
     /* Окна на зданиях */
     .window-light {
       position: absolute;
       background: #ffeb3b;
       border: 1px solid #ffc107;
     }
-
     /* Окна на первом здании */
     .building-1 .window-light:nth-child(1) {
       top: 20px;
@@ -92,28 +83,24 @@
       width: 10px;
       height: 15px;
     }
-
     .building-1 .window-light:nth-child(2) {
       top: 20px;
       right: 10px;
       width: 10px;
       height: 15px;
     }
-
     .building-1 .window-light:nth-child(3) {
       top: 50px;
       left: 10px;
       width: 10px;
       height: 15px;
     }
-
     .building-1 .window-light:nth-child(4) {
       top: 50px;
       right: 10px;
       width: 10px;
       height: 15px;
     }
-
     /* Окна на втором здании */
     .building-2 .window-light:nth-child(1) {
       top: 20px;
@@ -121,42 +108,36 @@
       width: 12px;
       height: 18px;
     }
-
     .building-2 .window-light:nth-child(2) {
       top: 20px;
       right: 15px;
       width: 12px;
       height: 18px;
     }
-
     .building-2 .window-light:nth-child(3) {
       top: 50px;
       left: 15px;
       width: 12px;
       height: 18px;
     }
-
     .building-2 .window-light:nth-child(4) {
       top: 50px;
       right: 15px;
       width: 12px;
       height: 18px;
     }
-
     .building-2 .window-light:nth-child(5) {
       top: 80px;
       left: 15px;
       width: 12px;
       height: 18px;
     }
-
     .building-2 .window-light:nth-child(6) {
       top: 80px;
       right: 15px;
       width: 12px;
       height: 18px;
     }
-
     /* Окна на третьем здании */
     .building-3 .window-light:nth-child(1) {
       top: 15px;
@@ -164,28 +145,24 @@
       width: 8px;
       height: 12px;
     }
-
     .building-3 .window-light:nth-child(2) {
       top: 15px;
       right: 8px;
       width: 8px;
       height: 12px;
     }
-
     .building-3 .window-light:nth-child(3) {
       top: 40px;
       left: 8px;
       width: 8px;
       height: 12px;
     }
-
     .building-3 .window-light:nth-child(4) {
       top: 40px;
       right: 8px;
       width: 8px;
       height: 12px;
     }
-
     .curtain {
       position: absolute;
       top: 0;
@@ -212,7 +189,6 @@
     .curtain.open-right {
       transform: translateX(110%);
     }
-
     /* Стили для люстры */
     .chandelier {
       position: absolute;
@@ -223,7 +199,6 @@
       height: 100px;
       z-index: 25;
     }
-
     .chandelier-chain {
       position: absolute;
       top: 0;
@@ -233,7 +208,6 @@
       height: 20px;
       background: #555;
     }
-
     .chandelier-base {
       position: absolute;
       top: 20px;
@@ -245,7 +219,6 @@
       border-radius: 6px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
-
     /* Улучшенная люстра */
     .chandelier-body {
       position: absolute;
@@ -258,7 +231,6 @@
       border-radius: 50% 50% 40% 40%;
       box-shadow: 0 3px 6px rgba(0,0,0,0.4);
     }
-
     /* Декоративные элементы люстры */
     .chandelier-decor {
       position: absolute;
@@ -270,7 +242,6 @@
       background: linear-gradient(to right, transparent, #666, transparent);
       border-radius: 4px;
     }
-
     .chandelier-arm {
       position: absolute;
       top: 50px;
@@ -279,19 +250,16 @@
       background: linear-gradient(to right, #555, #333);
       border-radius: 2px;
     }
-
     .chandelier-arm.left {
       left: 20px;
       transform: rotate(-35deg);
       transform-origin: left top;
     }
-
     .chandelier-arm.right {
       right: 20px;
       transform: rotate(35deg);
       transform-origin: right top;
     }
-
     .chandelier-holder {
       position: absolute;
       width: 8px;
@@ -299,52 +267,44 @@
       background: linear-gradient(to bottom, #666, #444);
       border-radius: 0 0 4px 4px;
     }
-
     .chandelier-holder.left {
       top: 55px;
       left: 10px;
       transform: rotate(-35deg);
     }
-
     .chandelier-holder.right {
       top: 55px;
       right: 10px;
       transform: rotate(35deg);
     }
-
     .chandelier-holder.center {
       top: 65px;
       left: 50%;
       transform: translateX(-50%);
     }
-
     .chandelier-chain-small {
       position: absolute;
       width: 1px;
       background: #777;
     }
-
     .chandelier-chain-small.left {
       top: 55px;
       left: 14px;
       height: 12px;
       transform: rotate(-35deg);
     }
-
     .chandelier-chain-small.right {
       top: 55px;
       right: 14px;
       height: 12px;
       transform: rotate(35deg);
     }
-
     .chandelier-chain-small.center {
       top: 65px;
       left: 50%;
       transform: translateX(-50%);
       height: 15px;
     }
-
     .chandelier-bulb {
       position: absolute;
       width: 20px;
@@ -355,29 +315,24 @@
       transition: all 450ms ease;
       z-index: 30;
     }
-
     .chandelier-bulb.left {
       top: 65px;
       left: 12px;
     }
-
     .chandelier-bulb.right {
       top: 65px;
       right: 11px;
     }
-
     .chandelier-bulb.center {
       top: 78px;
       left: 50%;
       transform: translateX(-50%);
     }
-
     .chandelier-bulb.on {
       background: radial-gradient(circle at 35% 30%, #fff9d6, #ffd54d 40%, #ffb300 60%);
       box-shadow: 0 0 25px 5px rgba(255,200,60,0.3);
       transform: scale(1.1);
     }
-
     /* Свечения для лампочек */
     .chandelier-glow {
       position: absolute;
@@ -391,19 +346,16 @@
       background: radial-gradient(circle at 50% 30%, rgba(255,235,140,0.8), rgba(255,200,60,0.1) 60%);
       z-index: 24;
     }
-
     .chandelier-glow.left {
       top: 65px;
       left: 12px;
       transform: translate(-50%, -50%);
     }
-
     .chandelier-glow.right {
       top: 65px;
       right: 11px;
       transform: translate(50%, -50%);
     }
-
     .chandelier-glow.center {
       top: 90px;
       left: 50%;
@@ -412,11 +364,9 @@
       height: 120px;
       filter: blur(20px);
     }
-
     .chandelier-glow.on {
       opacity: 1;
     }
-
     .tv-container {
         position: absolute;
         bottom: 60px;
@@ -426,7 +376,6 @@
         height: 144px;
         z-index: 15;
     }
-
     .tv {
       display: flex;
       align-items: center;
@@ -447,7 +396,6 @@
       background: linear-gradient(180deg,#0b3 10%, #036 90%);
       color: white;
     }
-
     .tv-screen {
       width: 100%;
       height: 100%;
@@ -460,7 +408,6 @@
     .tv-on .screen-text {
       display: none;
     }
-
     .tv-frame {
       position: absolute;
       top: 0;
@@ -471,7 +418,6 @@
       box-sizing: border-box;
       pointer-events: none;
     }
-
     .tv-stand {
       position: absolute;
       top: 100%;
@@ -484,7 +430,6 @@
       z-index: 1;
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-
     .tv-stand-top {
         position: absolute;
         top: 0;
@@ -495,7 +440,6 @@
         border-radius: 8px 8px 0 0;
         box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2);
     }
-
     .tv-stand-boards {
         position: absolute;
         top: 2px;
@@ -505,14 +449,12 @@
         display: flex;
         justify-content: space-between;
     }
-
     .tv-stand-board {
         width: calc(33% - 4px);
         height: 100%;
         background: linear-gradient(180deg, #7B3F09, #5D2906);
         border-radius: 2px;
     }
-
     .tv-stand-base {
         position: absolute;
         top: 30px;
@@ -523,7 +465,6 @@
         border-radius: 4px;
         box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
     }
-
     .digital-clock {
       position: absolute;
       top: -35px;
@@ -539,7 +480,6 @@
       z-index: 2;
       transition: opacity 0.3s ease;
     }
-
     .time-display {
       font-family: 'Courier New', monospace;
       font-size: 18px;
@@ -548,7 +488,6 @@
       text-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
       letter-spacing: 1px;
     }
-
     /* Стили для вкладок */
     .tab-buttons {
       display: flex;
@@ -575,7 +514,6 @@
     .tab-content.active {
       display: block;
     }
-
     /* Стили для кнопки микрофона */
     .mic-button {
       width: 150px; /* Увеличение ширины в 1.5 раза */
@@ -603,7 +541,6 @@
       height: 40px;
       fill: #4b5563;
     }
-
     /* Анимация записи */
     .recording-dot {
       position: absolute;
@@ -619,7 +556,6 @@
       display: block;
       animation: pulse 1.5s infinite;
     }
-
     @keyframes pulse {
       0% {
         transform: scale(0.95);
@@ -634,7 +570,6 @@
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
       }
     }
-
     /* Полоска частот */
     .frequency-bar {
       height: 4px;
@@ -644,7 +579,33 @@
       width: 0%;
       transition: width 0.1s ease;
     }
-
+    /* Стили для сценариев */
+    .scenario-section {
+      margin-top: 1rem;
+    }
+    .scenario-form {
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      background-color: #f9fafb;
+      margin-bottom: 1rem;
+    }
+    .device-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+    }
+    .scenario-list {
+      margin-top: 1rem;
+    }
+    .scenario-item {
+      padding: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .scenario-item button {
+      margin-left: 0.5rem;
+    }
     @media (max-width: 768px) {
       .room {
         height: 360px;
@@ -656,13 +617,12 @@
   <div class="w-full max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-6">
     <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
       <h2 class="text-xl font-semibold mb-3">Smart Home Controls</h2>
-
       <!-- Вкладки (поменяли местами) -->
       <div class="tab-buttons">
         <button class="tab-button active" data-tab="voice">Голосовой ввод</button>
         <button class="tab-button" data-tab="buttons">Кнопки</button>
+        <button class="tab-button" data-tab="scenarios">Сценарии</button> <!-- Новая вкладка -->
       </div>
-
       <!-- Содержимое вкладок -->
       <div class="tab-content active" id="tab-voice-content">
         <div class="flex flex-col items-center">
@@ -674,36 +634,29 @@
           </div>
           <p class="text-gray-500 text-sm mt-2">Нажмите для записи</p>
           <div id="voice-status" class="text-sm mt-2 text-center h-6"></div>
-
           <!-- Полоска частот -->
           <div id="frequency-bar" class="frequency-bar w-full max-w-xs"></div>
         </div>
       </div>
-
       <div class="tab-content" id="tab-buttons-content">
         <div class="space-y-3">
           <button id="btn-curtains" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
             Закрыть шторы
           </button>
-
           <button id="btn-lights" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
             Включить свет
           </button>
-
           <button id="btn-tv" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
             Включить ТВ
           </button>
-
           <!-- Кнопка для выключения часов -->
           <button id="btn-clock" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
             Выключить часы
           </button>
-
           <!-- Кнопка для отображения погоды -->
           <button id="btn-weather" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
             Показать погоду
           </button>
-
           <div class="flex gap-2 mt-2">
             <button id="btn-morning" class="flex-1 py-2 rounded-lg bg-yellow-400 hover:opacity-90">
               Утро
@@ -712,10 +665,66 @@
               Вечер
             </button>
           </div>
+          <!-- Кнопка для открытия сценариев - теперь вкладка -->
+          <!-- <button id="btn-scenarios" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform mt-4">
+            Сценарии
+          </button> -->
+        </div>
+        <!-- Панель сценариев - теперь таб-контент -->
+        <!-- <div id="scenario-panel" class="scenario-section hidden"> -->
+      </div>
+      <div class="tab-content" id="tab-scenarios-content"> <!-- Новый таб-контент -->
+        <div class="scenario-section">
+          <h3 class="text-lg font-medium mb-2">Сценарии</h3>
+          <div class="scenario-form">
+            <input type="text" id="scenario-name" placeholder="Название сценария" class="w-full p-2 mb-2 border rounded">
+            <div class="space-y-2 mb-2">
+              <div class="device-option">
+                <label>Шторы</label>
+                <select id="device-curtains" class="border rounded p-1">
+                  <option value="open">Открыть</option>
+                  <option value="close">Закрыть</option>
+                </select>
+              </div>
+              <div class="device-option">
+                <label>Свет</label>
+                <select id="device-lights" class="border rounded p-1">
+                  <option value="on">Включить</option>
+                  <option value="off">Выключить</option>
+                </select>
+              </div>
+              <div class="device-option">
+                <label>ТВ</label>
+                <select id="device-tv" class="border rounded p-1">
+                  <option value="on">Включить</option>
+                  <option value="off">Выключить</option>
+                </select>
+              </div>
+              <div class="device-option">
+                <label>Часы</label>
+                <select id="device-clock" class="border rounded p-1">
+                  <option value="on">Включить</option>
+                  <option value="off">Выключить</option>
+                </select>
+              </div>
+              <div class="device-option">
+                <label>Погода</label>
+                <select id="device-weather" class="border rounded p-1">
+                  <option value="show">Показать</option>
+                  <option value="hide">Скрыть</option>
+                </select>
+              </div>
+            </div>
+            <button id="save-scenario" class="w-full py-2 bg-blue-500 text-white rounded-lg hover:opacity-90">Сохранить</button>
+          </div>
+          <!-- Список сценариев -->
+          <div id="scenario-list" class="scenario-list">
+            <h4 class="text-md font-medium mb-1">Сохранённые сценарии</h4>
+            <!-- Элементы списка будут добавляться сюда -->
+          </div>
         </div>
       </div>
     </aside>
-
     <main class="md:col-span-2 bg-gradient-to-b from-white/60 to-transparent rounded-2xl p-6 relative overflow-hidden shadow-xl">
       <!-- Панель погоды -->
       <div id="weather-panel" class="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-2xl shadow-xl p-3 z-50 hidden w-48">
@@ -725,7 +734,6 @@
           <div class="text-xl mt-1">+15°</div>
         </div>
       </div>
-
       <div class="flex items-start gap-6">
         <div class="flex-1">
           <div id="room" class="room relative rounded-xl p-6 h-[420px] transition-all duration-700 bg-[#eaf2ff] text-black">
@@ -758,7 +766,6 @@
               <div class="curtain left open-left"></div>
               <div class="curtain right open-right"></div>
             </div>
-
             <!-- Люстра -->
             <div class="chandelier">
               <div class="chandelier-chain"></div>
@@ -781,11 +788,10 @@
               <div class="chandelier-glow right"></div>
               <div class="chandelier-glow center"></div>
             </div>
-
             <div class="tv-container">
                 <div class="tv tv-off">
                     <div class="tv-frame"></div>
-                    <img src="https://cdn.maximonline.ru/91/26/c4/9126c445ee6e097754b5fdf471e47874/416x257_0xac120005_2938080411529046295.gif  " alt="TV Screen" class="tv-screen">
+                    <img src="https://cdn.maximonline.ru/91/26/c4/9126c445ee6e097754b5fdf471e47874/416x257_0xac120005_2938080411529046295.gif    " alt="TV Screen" class="tv-screen">
                     <div class="screen-text flex items-center justify-center text-sm font-medium h-full">ТВ — выкл.</div>
                 </div>
                 <div class="tv-stand">
@@ -803,9 +809,7 @@
                     </div>
                 </div>
             </div>
-
           </div>
-
           <div class="mt-4 grid grid-cols-2 gap-2">
             <div id="status-curtains" class="p-3 rounded-lg bg-white/70 dark:bg-gray-800/60">Шторы: Открыты</div>
             <div id="status-lights" class="p-3 rounded-lg bg-white/70 dark:bg-gray-800/60">Свет: Выключен</div>
@@ -815,7 +819,6 @@
         </div>
       </div>
     </main>
-
     <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
       <h2 class="text-xl font-semibold mb-3">История запросов</h2>
       <ul id="history-list" class="space-y-2 h-[500px] overflow-y-auto"> <!-- Изменена высота -->
@@ -824,29 +827,23 @@
       </ul>
     </aside>
   </div>
-
   <script>
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => document.querySelectorAll(sel);
-
     // Логика переключения вкладок
     const tabButtons = $$('.tab-button');
     const tabContents = $$('.tab-content');
-
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
         const tabName = button.getAttribute('data-tab');
-
         // Убираем активный класс у всех кнопок и контентов
         tabButtons.forEach(btn => btn.classList.remove('active'));
         tabContents.forEach(content => content.classList.remove('active'));
-
         // Добавляем активный класс текущей кнопке и контенту
         button.classList.add('active');
         $(`#tab-${tabName}-content`).classList.add('active');
       });
     });
-
     // Логика кнопки микрофона
     const micButton = $('#mic-button');
     const voiceStatus = $('#voice-status');
@@ -856,24 +853,22 @@
     let frequencyInterval = null;
     let mediaRecorder = null;
     let audioChunks = [];
-
     // При загрузке страницы открываем вкладку голосового ввода
     window.addEventListener('DOMContentLoaded', () => {
       // Активируем вкладку голосового ввода
       const voiceTabButton = $('.tab-button[data-tab="voice"]');
       const buttonsTabButton = $('.tab-button[data-tab="buttons"]');
+      const scenariosTabButton = $('.tab-button[data-tab="scenarios"]'); // Новая кнопка
       const voiceTabContent = $('#tab-voice-content');
       const buttonsTabContent = $('#tab-buttons-content');
-
+      const scenariosTabContent = $('#tab-scenarios-content'); // Новый контент
       // Убираем активный класс у кнопок и контентов
       tabButtons.forEach(btn => btn.classList.remove('active'));
       tabContents.forEach(content => content.classList.remove('active'));
-
       // Добавляем активный класс голосовому вводу
       voiceTabButton.classList.add('active');
       voiceTabContent.classList.add('active');
     });
-
     // Функция для запроса доступа к микрофону
     async function requestMicrophoneAccess() {
       try {
@@ -886,7 +881,6 @@
         return null;
       }
     }
-
     // Функция для имитации полоски частот
     function startFrequencySimulation() {
       frequencyInterval = setInterval(() => {
@@ -894,28 +888,23 @@
         frequencyBar.style.width = `${width}%`;
       }, 100);
     }
-
     // Функция для остановки имитации полоски частот
     function stopFrequencySimulation() {
       clearInterval(frequencyInterval);
       frequencyBar.style.width = '0%';
     }
-
     // --- Новая логика для истории запросов ---
     const historyList = $('#history-list');
-
     // Загрузка истории из localStorage
     function loadHistory() {
         const history = JSON.parse(localStorage.getItem('smartHomeHistory') || '[]');
         renderHistory(history);
         return history;
     }
-
     // Сохранение истории в localStorage
     function saveHistory(history) {
         localStorage.setItem('smartHomeHistory', JSON.stringify(history));
     }
-
     // Отображение истории
     function renderHistory(history) {
         if (history.length === 0) {
@@ -930,7 +919,6 @@
             historyList.appendChild(li);
         });
     }
-
     // Добавление новой команды в историю
     function addToHistory(command) {
         const history = loadHistory();
@@ -942,21 +930,17 @@
         saveHistory(history);
         renderHistory(history);
     }
-
     // --- Логика для отображения погоды ---
     const weatherPanel = $('#weather-panel');
     const btnWeather = $('#btn-weather');
-
     btnWeather.addEventListener('click', () => {
         weatherPanel.classList.remove('hidden');
         addToHistory("Погода: Сургут, Солнечно, +15°C"); // Добавляем в историю
-
         // Автоматически скрываем панель через 5 секунд
         setTimeout(() => {
             weatherPanel.classList.add('hidden');
         }, 5000);
     });
-
     // --- Обновленная логика кнопки микрофона ---
     if (micButton) {
         micButton.addEventListener('click', async () => {
@@ -965,7 +949,6 @@
                 isListening = true;
                 micButton.classList.add('listening');
                 voiceStatus.textContent = 'Запись...';
-
                 // Запрашиваем доступ к микрофону
                 const stream = await requestMicrophoneAccess();
                 if (stream) {
@@ -975,10 +958,8 @@
                         seconds++;
                         voiceStatus.textContent = `Запись... ${seconds}с`;
                     }, 1000);
-
                     // Запускаем имитацию полоски частот
                     startFrequencySimulation();
-
                     // Здесь будет логика для запуска реальной записи
                     // mediaRecorder = new MediaRecorder(stream);
                     // mediaRecorder.start();
@@ -996,10 +977,8 @@
                 micButton.classList.remove('listening');
                 clearInterval(recordingInterval);
                 voiceStatus.textContent = 'Обработка...';
-
                 // Останавливаем имитацию полоски частот
                 stopFrequencySimulation();
-
                 // Имитация обработки команды
                 setTimeout(() => {
                     const mockCommand = "Включить свет и ТВ"; // Имитация распознанной команды
@@ -1009,7 +988,6 @@
                         voiceStatus.textContent = '';
                     }, 2000);
                 }, 1500);
-
                 // Здесь будет логика для остановки записи и обработки команды
                 // if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 //     mediaRecorder.stop();
@@ -1017,7 +995,6 @@
             }
         });
     }
-
     // --- Обновленная логика кнопок ---
     const btnCurtains = $('#btn-curtains');
     const btnLights = $('#btn-lights');
@@ -1035,12 +1012,10 @@
     const chandelierGlows = $$('.chandelier-glow');
     const tv = $('.tv');
     const timeDisplay = $('#time-display');
-
     const statusCurtains = $('#status-curtains');
     const statusLights = $('#status-lights');
     const statusTv = $('#status-tv');
     const statusClock = $('#status-clock');
-
     // Изначально шторы открыты
     let curtainsOpen = true;
     let lightsOn = false;
@@ -1050,7 +1025,6 @@
     // Новое состояние для часов
     let clockOn = true;
     let clockInterval = null;
-
     function playSound(src) {
       if (!soundEnabled) return;
       try {
@@ -1061,7 +1035,6 @@
         console.warn('Audio error', e);
       }
     }
-
     function updateClock() {
       if (!clockOn) return; // Не обновляем, если часы выключены
       const now = new Date();
@@ -1070,7 +1043,6 @@
       const seconds = now.getSeconds().toString().padStart(2, '0');
       timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
     }
-
     // Функция для запуска/остановки часов
     function toggleClock() {
         clockOn = !clockOn;
@@ -1092,21 +1064,17 @@
             addToHistory("Часы выключены"); // Добавляем в историю
         }
     }
-
     function updateUI() {
       const btnCurtains = $('#btn-curtains');
       const btnLights = $('#btn-lights');
       const btnTv = $('#btn-tv');
-
       if (btnCurtains) btnCurtains.textContent = curtainsOpen ? 'Закрыть шторы' : 'Открыть шторы';
       if (btnLights) btnLights.textContent = lightsOn ? 'Выключить свет' : 'Включить свет';
       if (btnTv) btnTv.textContent = tvOn ? 'Выключить ТВ' : 'Включить ТВ';
       // Состояние часов обновляется в toggleClock
-
       curtainLeft.classList.toggle('open-left', curtainsOpen);
       curtainRight.classList.toggle('open-right', curtainsOpen);
       if (sun) sun.style.opacity = curtainsOpen ? '1' : '0.3';
-
       // Управление люстрой
       chandelierBulbs.forEach(bulb => {
         bulb.classList.toggle('on', lightsOn);
@@ -1115,7 +1083,6 @@
       chandelierGlows.forEach(glow => {
         glow.classList.toggle('on', lightsOn);
       });
-
       tv.classList.toggle('tv-on', tvOn);
       tv.classList.toggle('tv-off', !tvOn);
       const screenText = $('.tv .screen-text');
@@ -1126,18 +1093,15 @@
             screenText.textContent = 'ТВ — выкл.';
           }
       }
-
       if (statusCurtains) statusCurtains.textContent = `Шторы: ${curtainsOpen ? 'Открыты' : 'Закрыты'}`;
       if (statusLights) statusLights.textContent = `Свет: ${lightsOn ? 'Включён' : 'Выключен'}`;
       if (statusTv) statusTv.textContent = `ТВ: ${tvOn ? 'Вкл.' : 'Выкл.'}`;
       // Статус часов обновляется в toggleClock
     }
-
     // Проверяем существование элементов перед добавлением обработчиков
     if (btnCurtains) {
       btnCurtains.addEventListener('click', () => {
         curtainsOpen = !curtainsOpen;
-
         if (!curtainsOpen) {
           document.body.classList.add('night');
           if (room) {
@@ -1153,17 +1117,14 @@
             }
           }
         }
-
         playSound(curtainsOpen ? '/sounds/curtain-open.mp3' : '/sounds/curtain-close.mp3');
         updateUI();
         addToHistory(curtainsOpen ? "Шторы открыты" : "Шторы закрыты"); // Добавляем в историю
       });
     }
-
     if (btnLights) {
       btnLights.addEventListener('click', () => {
         lightsOn = !lightsOn;
-
         if (lightsOn) {
           document.body.classList.remove('night');
           if (room) {
@@ -1178,13 +1139,11 @@
                room.classList.add('bg-[#0b1320]', 'text-white');
            }
         }
-
         playSound('/sounds/switch.mp3');
         updateUI();
         addToHistory(lightsOn ? "Свет включён" : "Свет выключен"); // Добавляем в историю
       });
     }
-
     if (btnTv) {
       btnTv.addEventListener('click', () => {
         tvOn = !tvOn;
@@ -1193,7 +1152,6 @@
         addToHistory(tvOn ? "ТВ включён" : "ТВ выключен"); // Добавляем в историю
       });
     }
-
     // Обработчик для кнопки выключения часов
     const btnClock = $('#btn-clock');
     if (btnClock) {
@@ -1202,7 +1160,6 @@
           // playSound('/sounds/switch.mp3'); // Можно добавить звук
       });
     }
-
     if (btnMorning) {
       btnMorning.addEventListener('click', () => {
         curtainsOpen = true;
@@ -1210,19 +1167,16 @@
         tvOn = false;
         // При утреннем режиме включаем часы
         if (!clockOn) toggleClock();
-
         document.body.classList.remove('night');
         if (room) {
             room.classList.remove('bg-[#0b1320]', 'text-white');
             room.classList.add('bg-[#eaf2ff]', 'text-black');
         }
-
         playSound('/sounds/morning.mp3');
         updateUI();
         addToHistory("Утренний режим активирован"); // Добавляем в историю
       });
     }
-
     if (btnEvening) {
       btnEvening.addEventListener('click', () => {
         curtainsOpen = false;
@@ -1230,28 +1184,138 @@
         tvOn = true;
         // При вечернем режиме включаем часы
         if (!clockOn) toggleClock();
-
         document.body.classList.add('night');
         if (room) {
             room.classList.remove('bg-[#eaf2ff]', 'text-black');
             room.classList.add('bg-[#0b1320]', 'text-white');
         }
-
         playSound('/sounds/evening.mp3');
         updateUI();
         addToHistory("Вечерний режим активирован"); // Добавляем в историю
       });
     }
-
     // Инициализация часов
     updateClock();
     clockInterval = setInterval(updateClock, 1000);
-
     // Изначально шторы открыты
     updateUI();
-
+    // --- Новая логика для сценариев ---
+    // const btnScenarios = $('#btn-scenarios'); // Эта строка больше не нужна
+    // const scenarioPanel = $('#scenario-panel'); // Эта строка больше не нужна
+    const scenarioList = $('#scenario-list');
+    const saveScenarioBtn = $('#save-scenario');
+    // Загрузка сценариев из localStorage
+    function loadScenarios() {
+        const scenarios = JSON.parse(localStorage.getItem('smartHomeScenarios') || '[]');
+        renderScenarioList(scenarios);
+        return scenarios;
+    }
+    // Сохранение сценариев в localStorage
+    function saveScenarios(scenarios) {
+        localStorage.setItem('smartHomeScenarios', JSON.stringify(scenarios));
+    }
+    // Отображение списка сценариев
+    function renderScenarioList(scenarios) {
+        scenarioList.innerHTML = '<h4 class="text-md font-medium mb-1">Сохранённые сценарии</h4>';
+        if (scenarios.length === 0) {
+            scenarioList.innerHTML += '<p class="text-gray-500 text-sm italic">Сценарии отсутствуют</p>';
+            return;
+        }
+        scenarios.forEach((scenario, index) => {
+            const div = document.createElement('div');
+            div.className = 'scenario-item';
+            div.innerHTML = `
+                <span>${scenario.name}</span>
+                <button onclick="runScenario(${index})" class="bg-green-500 text-white px-2 py-1 rounded text-xs">Запустить</button>
+                <button onclick="deleteScenario(${index})" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Удалить</button>
+            `;
+            scenarioList.appendChild(div);
+        });
+    }
+    // Функция запуска сценария
+    function runScenario(index) {
+        const scenarios = loadScenarios();
+        const scenario = scenarios[index];
+        if (scenario) {
+            // Применяем изменения из сценария
+            if (scenario.actions.curtains === 'open') {
+                curtainsOpen = true;
+                playSound('/sounds/curtain-open.mp3');
+            } else if (scenario.actions.curtains === 'close') {
+                curtainsOpen = false;
+                playSound('/sounds/curtain-close.mp3');
+            }
+            if (scenario.actions.lights === 'on') {
+                lightsOn = true;
+                playSound('/sounds/switch.mp3');
+            } else if (scenario.actions.lights === 'off') {
+                lightsOn = false;
+                playSound('/sounds/switch.mp3');
+            }
+            if (scenario.actions.tv === 'on') {
+                tvOn = true;
+                playSound('/sounds/tv-toggle.mp3');
+            } else if (scenario.actions.tv === 'off') {
+                tvOn = false;
+                playSound('/sounds/tv-toggle.mp3');
+            }
+            if (scenario.actions.clock === 'on' && !clockOn) {
+                toggleClock();
+            } else if (scenario.actions.clock === 'off' && clockOn) {
+                toggleClock();
+            }
+            if (scenario.actions.weather === 'show') {
+                weatherPanel.classList.remove('hidden');
+                setTimeout(() => {
+                    weatherPanel.classList.add('hidden');
+                }, 5000);
+            } else if (scenario.actions.weather === 'hide') {
+                weatherPanel.classList.add('hidden');
+            }
+            // Обновляем UI
+            updateUI();
+            // Добавляем в историю
+            addToHistory(`Сценарий "${scenario.name}" запущен`);
+        }
+    }
+    // Функция удаления сценария
+    function deleteScenario(index) {
+        const scenarios = loadScenarios();
+        scenarios.splice(index, 1);
+        saveScenarios(scenarios);
+        renderScenarioList(scenarios);
+    }
+    // Обработчик для кнопки сохранения сценария
+    saveScenarioBtn.addEventListener('click', () => {
+        const nameInput = $('#scenario-name');
+        const name = nameInput.value.trim();
+        if (!name) {
+            alert('Пожалуйста, введите название сценария.');
+            return;
+        }
+        const actions = {
+            curtains: $('#device-curtains').value,
+            lights: $('#device-lights').value,
+            tv: $('#device-tv').value,
+            clock: $('#device-clock').value,
+            weather: $('#device-weather').value
+        };
+        const scenarios = loadScenarios();
+        scenarios.push({ name, actions });
+        saveScenarios(scenarios);
+        // Очищаем форму
+        nameInput.value = '';
+        // Сбрасываем все select'ы
+        const selects = $$('#scenario-form select');
+        selects.forEach(select => select.value = 'on'); // Выбираем первый вариант
+        // Обновляем список
+        renderScenarioList(scenarios);
+        addToHistory(`Сценарий "${name}" создан`);
+    });
     // Инициализация истории
     loadHistory();
+    // Инициализация сценариев
+    loadScenarios();
   </script>
 </body>
 </html>
