@@ -1,10 +1,19 @@
 import torch
-import torchaudio
+# torchaudio больше не нужно для загрузки
 from transformers import AutoProcessor, WhisperForConditionalGeneration
 from fastapi import UploadFile
 from io import BytesIO
 import tempfile
+import os
+import logging
 from pathlib import Path
+from pydub import AudioSegment  # Импортируем pydub
+import numpy as np  # Импортируем numpy
+
+logger = logging.getLogger(__name__)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+logging.error(f"Используемое устройство: {device}")
 
 # Загрузка модели и процессора
 processor = AutoProcessor.from_pretrained("openai/whisper-large-v3-turbo")
@@ -12,34 +21,77 @@ model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-large-v3
 
 
 async def get_text_from_audio(file: UploadFile):
+    logger.error('Начало транскрибации')
     suffix = Path(file.filename).suffix
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        tmp.write(await file.read())
-        audio_path = tmp.name
+    temp_input_path = None
+    temp_wav_path = None
 
+    try:
+        # 1. Сохраняем загруженный файл во временный файл
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp_input:
+            content = await file.read()
+            tmp_input.write(content)
+            temp_input_path = tmp_input.name
+        logger.error(f"Сохранён временный файл: {temp_input_path}")
 
-    # Загрузка и декодирование MP3 в waveform
-    waveform, sample_rate = torchaudio.load(audio_path)
+        # 2. Загружаем файл с помощью pydub (он сам определит формат)
+        try:
+            audio_segment = AudioSegment.from_file(temp_input_path)
+            logger.info(f"Файл {temp_input_path} загружен с помощью pydub.")
+        except Exception as e:
+            logger.error(f"Ошибка загрузки с помощью pydub: {e}")
+            raise RuntimeError(f"Не удалось загрузить аудио с помощью pydub: {e}")
 
-    # Если у аудио больше одного канала (например, стерео), преобразуем в моно
-    if waveform.shape[0] > 1:
-        waveform = torch.mean(waveform, dim=0, keepdim=True)
+        # 3. Обработка аудио с помощью pydub: ресэмплинг и моно
+        # Ресэмплинг на 16000 Гц (требуется для Whisper)
+        if audio_segment.frame_rate != 16000:
+            audio_segment = audio_segment.set_frame_rate(16000)
+            logger.info(f"Аудио ресемплировано до 16000 Гц.")
 
-    # Ресэмплинг на 16000 Гц, если необходимо
-    if sample_rate != 16000:
-        resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
-        waveform = resampler(waveform)
+        # Преобразование в моно, если стерео
+        if audio_segment.channels > 1:
+            audio_segment = audio_segment.set_channels(1)
+            logger.info(f"Аудио преобразовано в моно.")
 
-    # Преобразование в массив (numpy) и передача в процессор
-    audio_array = waveform.squeeze().numpy()
+        # 4. Преобразование в numpy array
+        # pydub использует 16-битные целые числа, нам нужны float32 для Whisper
+        audio_array_int16 = np.array(audio_segment.get_array_of_samples())
+        audio_array_float32 = audio_array_int16.astype(np.float32) / 32768.0  # Нормализация
 
-    # Подготовка входных данных
-    inputs = processor(audio_array, return_tensors="pt", sampling_rate=16000)
-    input_features = inputs.input_features
+        logger.info(
+            f"Аудио обработано: форма {audio_array_float32.shape}, тип {audio_array_float32.dtype}, частота {audio_segment.frame_rate} Гц")
 
-    # Генерация транскрипции
-    generated_ids = model.generate(inputs=input_features)
+        logger.error('1')
 
-    # Декодирование результата
-    transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        # 5. Транскрибация с помощью Whisper
+        # Подготовка входных данных: processor ожидает аудио и частоту дискретизации
+        inputs = processor(audio_array_float32, return_tensors="pt", sampling_rate=audio_segment.frame_rate)
+        input_features = inputs.input_features
+
+        # Генерация транскрипции
+        generated_ids = model.generate(inputs=input_features)
+
+        # Декодирование результата
+        transcription = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        logger.error(f"Транскрибация завершена: {transcription}")
+
+    finally:
+        # 6. Удаляем временные файлы
+        if temp_wav_path and os.path.exists(temp_wav_path):
+            try:
+                os.unlink(temp_wav_path)
+                logger.info(f"Удалён временный файл WAV: {temp_wav_path}")
+            except PermissionError as e:
+                logger.warning(f"Не удалось удалить временный файл WAV {temp_wav_path}: {e}")
+        if temp_input_path and os.path.exists(temp_input_path):
+            try:
+                os.unlink(temp_input_path)
+                logger.info(f"Удалён временный файл исходного формата: {temp_input_path}")
+            except PermissionError as e:
+                logger.warning(f"Не удалось удалить временный файл исходного формата {temp_input_path}: {e}")
+
     return transcription
+
+# async def classify_text(text: str) -> str:
+#     # Ваша логика классификации
+#     pass

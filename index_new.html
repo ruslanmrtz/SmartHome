@@ -942,58 +942,142 @@
         }, 5000);
     });
     // --- Обновленная логика кнопки микрофона ---
-    if (micButton) {
-        micButton.addEventListener('click', async () => {
-            if (!isListening) {
-                // Начинаем запись
-                isListening = true;
-                micButton.classList.add('listening');
-                voiceStatus.textContent = 'Запись...';
-                // Запрашиваем доступ к микрофону
-                const stream = await requestMicrophoneAccess();
-                if (stream) {
-                    // Имитация записи (заглушка)
-                    let seconds = 0;
-                    recordingInterval = setInterval(() => {
-                        seconds++;
-                        voiceStatus.textContent = `Запись... ${seconds}с`;
-                    }, 1000);
-                    // Запускаем имитацию полоски частот
-                    startFrequencySimulation();
-                    // Здесь будет логика для запуска реальной записи
-                    // mediaRecorder = new MediaRecorder(stream);
-                    // mediaRecorder.start();
-                } else {
-                    isListening = false;
-                    micButton.classList.remove('listening');
-                    voiceStatus.textContent = 'Ошибка доступа к микрофону';
-                    setTimeout(() => {
-                        voiceStatus.textContent = '';
-                    }, 3000);
-                }
+    // --- Обновленная логика кнопки микрофона ---
+if (micButton) {
+    micButton.addEventListener('click', async () => {
+        if (!isListening) {
+            // Начинаем запись
+            isListening = true;
+            micButton.classList.add('listening');
+            voiceStatus.textContent = 'Запись...';
+
+            // Запрашиваем доступ к микрофону
+            const stream = await requestMicrophoneAccess();
+            if (stream) {
+                audioChunks = []; // Очищаем предыдущие фрагменты
+
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    // Останавливаем все треки потока
+                    stream.getTracks().forEach(track => track.stop());
+
+                    // Собираем аудио в Blob
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append('file', audioBlob, 'recording.webm');
+
+                    try {
+                        voiceStatus.textContent = 'Обработка запроса...';
+                        const response = await fetch('/transcribe/', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        console.log('Ответ от сервера:', data);
+                        const classification = data.transcribed_text; // Получаем строку из candidate_labels
+
+                        // --- Анализируем результат и вызываем действия ---
+                        let executedAction = false;
+                        let actionDescription = '';
+
+                        switch (classification) {
+                            case 'шторы':
+                                btnCurtains.click(); // Используем существующую логику кнопки
+                                actionDescription = curtainsOpen ? "Шторы открыты" : "Шторы закрыты";
+                                executedAction = true;
+                                break;
+                            case 'свет':
+                                btnLights.click(); // Используем существующую логику кнопки
+                                actionDescription = lightsOn ? "Свет включён" : "Свет выключен";
+                                executedAction = true;
+                                break;
+                            case 'телевизор':
+                                btnTv.click(); // Используем существующую логику кнопки
+                                actionDescription = tvOn ? "ТВ включён" : "ТВ выключен";
+                                executedAction = true;
+                                break;
+                            case 'часы':
+                                btnClock.click(); // Используем существующую логику кнопки
+                                actionDescription = clockOn ? "Часы выключены" : "Часы включены";
+                                executedAction = true;
+                                break;
+                            case 'утро':
+                                btnMorning.click(); // Используем существующую логику кнопки
+                                actionDescription = "Утренний режим активирован";
+                                executedAction = true;
+                                break;
+                            case 'вечер':
+                                btnEvening.click(); // Используем существующую логику кнопки
+                                actionDescription = "Вечерний режим активирован";
+                                executedAction = true;
+                                break;
+                            case 'погода':
+                                btnWeather.click(); // Используем существующую логику кнопки
+                                actionDescription = "Погода: Сургут, Солнечно, +15°C"; // Используем текст из существующего обработчика
+                                executedAction = true;
+                                break;
+                            default:
+                                // Если classification не совпадает ни с одним из кандидатов (маловероятно, но на всякий случай)
+                                console.warn("Неожиданная метка классификации:", classification);
+                                voiceStatus.textContent = 'Команда не распознана';
+                                addToHistory(`Голосовая команда (не распознана): "${classification}"`);
+                                return; // Выходим из onstop
+                        }
+
+                        if (executedAction) {
+                            addToHistory(actionDescription);
+                            voiceStatus.textContent = 'Команда выполнена';
+                        }
+                        // --- Конец анализа ---
+
+                    } catch (error) {
+                        console.error('Ошибка при отправке аудио или получении ответа:', error);
+                        voiceStatus.textContent = 'Ошибка при обработке команды';
+                        addToHistory(`Ошибка голосового ввода: ${error.message}`);
+                    }
+                };
+
+                // Запускаем запись
+                mediaRecorder.start();
+                let seconds = 0;
+                recordingInterval = setInterval(() => {
+                    seconds++;
+                    voiceStatus.textContent = `Запись... ${seconds}с`;
+                    if (seconds >= 5) {
+                        mediaRecorder.stop();
+                        clearInterval(recordingInterval);
+                    }
+                }, 1000);
+
+                startFrequencySimulation();
+
             } else {
-                // Останавливаем запись
                 isListening = false;
                 micButton.classList.remove('listening');
-                clearInterval(recordingInterval);
-                voiceStatus.textContent = 'Обработка...';
-                // Останавливаем имитацию полоски частот
-                stopFrequencySimulation();
-                // Имитация обработки команды
+                voiceStatus.textContent = 'Ошибка доступа к микрофону';
                 setTimeout(() => {
-                    const mockCommand = "Включить свет и ТВ"; // Имитация распознанной команды
-                    addToHistory(mockCommand); // Добавляем команду в историю
-                    voiceStatus.textContent = 'Команда выполнена';
-                    setTimeout(() => {
-                        voiceStatus.textContent = '';
-                    }, 2000);
-                }, 1500);
-                // Здесь будет логика для остановки записи и обработки команды
-                // if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                //     mediaRecorder.stop();
-                // }
+                    voiceStatus.textContent = '';
+                }, 3000);
             }
-        });
+        } else {
+            // Останавливаем запись
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                clearInterval(recordingInterval);
+                stopFrequencySimulation();
+            }
+            // Состояние isListening будет установлено в false в onstop коллбэке
+        }
+    });
     }
     // --- Обновленная логика кнопок ---
     const btnCurtains = $('#btn-curtains');

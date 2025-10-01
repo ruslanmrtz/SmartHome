@@ -15,6 +15,3 @@ def get_weather(city_id: int = 1490624) -> dict:
 
     except Exception as e:
         print("Exception (weather):", e)
-
-
-print(get_weather())

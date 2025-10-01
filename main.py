@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.responses import FileResponse
+import logging
 
 from weather import get_weather
 from whisper import get_text_from_audio
@@ -38,6 +39,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
     text = await get_text_from_audio(file)
 
+    logging.error('Началась классификация')
     classification = await classify_text(text)
 
     # Опционально: можно вернуть имя файла и размер
