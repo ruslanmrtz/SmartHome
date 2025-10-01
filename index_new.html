@@ -940,16 +940,52 @@
         renderHistory(history);
     }
     // --- Логика для отображения погоды ---
+
+
     const weatherPanel = $('#weather-panel');
-    const btnWeather = $('#btn-weather');
-    btnWeather.addEventListener('click', () => {
+const btnWeather = $('#btn-weather');
+
+btnWeather.addEventListener('click', async () => {
+    try {
+        voiceStatus.textContent = 'Получение погоды...';
+        const response = await fetch('/weather');
+        if (!response.ok) throw new Error('Не удалось получить данные о погоде');
+
+        const data = await response.json();
+        const tempCelsius = data.temp.toFixed(1); // Округляем до одного знака
+        const conditions = data.conditions;
+
+        // Обновляем содержимое панели
+        weatherPanel.innerHTML = `
+            <div class="text-center">
+                <div class="text-lg font-semibold">Сургут</div>
+                <div class="text-xl font-bold mt-1 capitalize">${conditions}</div>
+                <div class="text-xl mt-1">+${tempCelsius}°</div>
+            </div>
+        `;
+
+        // Показываем панель
         weatherPanel.classList.remove('hidden');
-        addToHistory("Погода: Сургут, Солнечно, +15°C"); // Добавляем в историю
-        // Автоматически скрываем панель через 5 секунд
+        addToHistory(`Погода: Сургут, ${conditions}, +${tempCelsius}°C`);
+
+        // Автоматически скрываем через 5 секунд
         setTimeout(() => {
             weatherPanel.classList.add('hidden');
         }, 5000);
-    });
+
+        voiceStatus.textContent = '';
+    } catch (error) {
+        console.error('Ошибка получения погоды:', error);
+        voiceStatus.textContent = 'Ошибка погоды';
+        addToHistory('Ошибка получения погоды');
+        setTimeout(() => {
+            if (!isListening) voiceStatus.textContent = '';
+        }, 2000);
+    }
+});
+
+
+
     // --- Обновленная логика кнопки микрофона ---
     // --- Обновленная логика кнопки микрофона ---
 if (micButton) {
