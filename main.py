@@ -3,8 +3,8 @@ from fastapi.responses import JSONResponse
 from fastapi.responses import FileResponse
 
 from weather import get_weather
-# from whisper import get_text_from_audio
-# from text_classification import classify_text
+from whisper import get_text_from_audio
+from text_classification import classify_text
 
 app = FastAPI(
     title="Audio to Text API (Stub)",
@@ -22,8 +22,6 @@ async def read_index():
 async def read_index():
     
     weather = get_weather()
-    weather = {'conditions': 'Солнечно',
-                'temp': '+18'}
     
     return weather
 

@@ -554,6 +554,7 @@
       display: flex;
       border-bottom: 1px solid #e5e7eb;
       margin-bottom: 1rem;
+      width: 100%; /* Исправлено: ширина теперь соответствует контейнеру */
     }
     .tab-button {
       flex: 1;
@@ -577,8 +578,8 @@
 
     /* Стили для кнопки микрофона */
     .mic-button {
-      width: 100px;
-      height: 100px;
+      width: 150px; /* Увеличение ширины в 1.5 раза */
+      height: 150px; /* Увеличение высоты в 1.5 раза */
       background-color: #e5e7eb;
       border: 2px solid #d1d5db;
       border-radius: 0.5rem;
@@ -652,16 +653,7 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
-  <!-- История запросов -->
-  <aside id="history-sidebar" class="fixed left-0 top-0 h-full w-64 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-r-2xl shadow-lg p-4 z-50 overflow-y-auto transition-transform -translate-x-full md:translate-x-0">
-    <h2 class="text-xl font-semibold mb-4">История запросов</h2>
-    <ul id="history-list" class="space-y-2">
-      <!-- Записи истории будут добавляться сюда -->
-      <li class="text-gray-500 text-sm italic">История пуста</li>
-    </ul>
-  </aside>
-
-  <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="w-full max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-6">
     <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
       <h2 class="text-xl font-semibold mb-3">Smart Home Controls</h2>
 
@@ -707,6 +699,11 @@
             Выключить часы
           </button>
 
+          <!-- Кнопка для отображения погоды -->
+          <button id="btn-weather" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+            Показать погоду
+          </button>
+
           <div class="flex gap-2 mt-2">
             <button id="btn-morning" class="flex-1 py-2 rounded-lg bg-yellow-400 hover:opacity-90">
               Утро
@@ -720,6 +717,15 @@
     </aside>
 
     <main class="md:col-span-2 bg-gradient-to-b from-white/60 to-transparent rounded-2xl p-6 relative overflow-hidden shadow-xl">
+      <!-- Панель погоды -->
+      <div id="weather-panel" class="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-2xl shadow-xl p-3 z-50 hidden w-48">
+        <div class="text-center">
+          <div class="text-lg font-semibold">Сургут</div>
+          <div class="text-xl font-bold mt-1">Солнечно</div>
+          <div class="text-xl mt-1">+15°</div>
+        </div>
+      </div>
+
       <div class="flex items-start gap-6">
         <div class="flex-1">
           <div id="room" class="room relative rounded-xl p-6 h-[420px] transition-all duration-700 bg-[#eaf2ff] text-black">
@@ -809,14 +815,15 @@
         </div>
       </div>
     </main>
-  </div>
 
-  <!-- Кнопка для открытия истории -->
-  <button id="toggle-history" class="fixed top-4 left-4 bg-blue-500 text-white p-2 rounded-full shadow-lg z-40">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-    </svg>
-  </button>
+    <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
+      <h2 class="text-xl font-semibold mb-3">История запросов</h2>
+      <ul id="history-list" class="space-y-2 h-[500px] overflow-y-auto"> <!-- Изменена высота -->
+        <!-- Записи истории будут добавляться сюда -->
+        <li class="text-gray-500 text-sm italic">История пуста</li>
+      </ul>
+    </aside>
+  </div>
 
   <script>
     const $ = (sel) => document.querySelector(sel);
@@ -896,8 +903,6 @@
 
     // --- Новая логика для истории запросов ---
     const historyList = $('#history-list');
-    const toggleHistoryBtn = $('#toggle-history');
-    const historySidebar = $('#history-sidebar');
 
     // Загрузка истории из localStorage
     function loadHistory() {
@@ -938,9 +943,18 @@
         renderHistory(history);
     }
 
-    // Переключение видимости боковой панели
-    toggleHistoryBtn.addEventListener('click', () => {
-        historySidebar.classList.toggle('-translate-x-full');
+    // --- Логика для отображения погоды ---
+    const weatherPanel = $('#weather-panel');
+    const btnWeather = $('#btn-weather');
+
+    btnWeather.addEventListener('click', () => {
+        weatherPanel.classList.remove('hidden');
+        addToHistory("Погода: Сургут, Солнечно, +15°C"); // Добавляем в историю
+
+        // Автоматически скрываем панель через 5 секунд
+        setTimeout(() => {
+            weatherPanel.classList.add('hidden');
+        }, 5000);
     });
 
     // --- Обновленная логика кнопки микрофона ---
