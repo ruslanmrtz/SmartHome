@@ -611,9 +611,29 @@
             height: 360px;
           }
         }
+        /* Стили для заголовка сервиса */
+        .service-title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5rem; /* Увеличил размер шрифта */
+            font-weight: bold;
+            color: #333; /* Цвет текста */
+            z-index: 100; /* Высокий z-index, чтобы был поверх других элементов */
+            background-color: rgba(255, 255, 255, 0.8); /* Легкий фон для читаемости */
+            padding: 5px 10px; /* Небольшой отступ */
+            border-radius: 5px; /* Скругление углов */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+        }
+        body.night .service-title {
+            color: #e0e0e0;
+            background-color: rgba(11, 18, 32, 0.8); /* Фон в темной теме */
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
+    <!-- Добавлен заголовок сервиса -->
+    <div class="service-title">ДомоВойс</div>
 <div class="w-full max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-6">
     <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
         <h2 class="text-xl font-semibold mb-3">Smart Home Controls</h2>
@@ -940,21 +960,16 @@
         renderHistory(history);
     }
     // --- Логика для отображения погоды ---
-
-
     const weatherPanel = $('#weather-panel');
 const btnWeather = $('#btn-weather');
-
 btnWeather.addEventListener('click', async () => {
     try {
         voiceStatus.textContent = 'Получение погоды...';
         const response = await fetch('/weather');
         if (!response.ok) throw new Error('Не удалось получить данные о погоде');
-
         const data = await response.json();
         const tempCelsius = data.temp.toFixed(1); // Округляем до одного знака
         const conditions = data.conditions;
-
         // Обновляем содержимое панели
         weatherPanel.innerHTML = `
             <div class="text-center">
@@ -963,16 +978,13 @@ btnWeather.addEventListener('click', async () => {
                 <div class="text-xl mt-1">+${tempCelsius}°</div>
             </div>
         `;
-
         // Показываем панель
         weatherPanel.classList.remove('hidden');
         addToHistory(`Погода: Сургут, ${conditions}, +${tempCelsius}°C`);
-
         // Автоматически скрываем через 5 секунд
         setTimeout(() => {
             weatherPanel.classList.add('hidden');
         }, 5000);
-
         voiceStatus.textContent = '';
     } catch (error) {
         console.error('Ошибка получения погоды:', error);
@@ -983,9 +995,6 @@ btnWeather.addEventListener('click', async () => {
         }, 2000);
     }
 });
-
-
-
     // --- Обновленная логика кнопки микрофона ---
     // --- Обновленная логика кнопки микрофона ---
 if (micButton) {
@@ -995,45 +1004,36 @@ if (micButton) {
             isListening = true;
             micButton.classList.add('listening');
             voiceStatus.textContent = 'Запись...';
-
             // Запрашиваем доступ к микрофону
             const stream = await requestMicrophoneAccess();
             if (stream) {
                 audioChunks = []; // Очищаем предыдущие фрагменты
-
                 mediaRecorder = new MediaRecorder(stream);
                 mediaRecorder.ondataavailable = event => {
                     audioChunks.push(event.data);
                 };
-
                 mediaRecorder.onstop = async () => {
     // Сбрасываем состояние записи
     isListening = false;
     micButton.classList.remove('listening');
     stopFrequencySimulation();
-
     // Останавливаем все треки потока
     stream.getTracks().forEach(track => track.stop());
-
     // Собираем аудио в Blob
     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
     const formData = new FormData();
     formData.append('file', audioBlob, 'recording.webm');
-
     try {
         voiceStatus.textContent = 'Обработка запроса...';
         const response = await fetch('/transcribe/', {
             method: 'POST',
             body: formData,
         });
-
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
         const classification = data.transcribed_text?.trim(); // Убираем лишние пробелы
-
         // Проверяем на "не найдено", пустое значение или "Не найден"
         if (!classification || classification === 'Не найден') {
             voiceStatus.textContent = 'Команда не распознана';
@@ -1043,53 +1043,44 @@ if (micButton) {
             }, 2000);
             return;
         }
-
         let executedAction = false;
         let actionDescription = '';
-
         switch (classification) {
             case 'шторы':
                 btnCurtains.click();
                 actionDescription = curtainsOpen ? "Шторы открыты" : "Шторы закрыты";
                 executedAction = true;
                 break;
-
             case 'свет':
                 btnLights.click();
                 actionDescription = lightsOn ? "Свет включён" : "Свет выключен";
                 executedAction = true;
                 break;
-
             case 'телевизор':
                 btnTv.click();
                 actionDescription = tvOn ? "ТВ включён" : "ТВ выключен";
                 executedAction = true;
                 break;
-
             case 'часы':
                 btnClock.click();
                 actionDescription = clockOn ? "Часы выключены" : "Часы включены";
                 executedAction = true;
                 break;
-
             case 'утро':
                 btnMorning.click();
                 actionDescription = "Утренний режим активирован";
                 executedAction = true;
                 break;
-
             case 'вечер':
                 btnEvening.click();
                 actionDescription = "Вечерний режим активирован";
                 executedAction = true;
                 break;
-
             case 'погода':
                 btnWeather.click();
                 actionDescription = "Погода: Сургут, Солнечно, +15°C";
                 executedAction = true;
                 break;
-
             default:
                 console.warn("Неизвестная команда:", classification);
                 voiceStatus.textContent = 'Команда не поддерживается';
@@ -1099,11 +1090,9 @@ if (micButton) {
                 }, 2000);
                 return;
         }
-
         if (executedAction) {
             addToHistory(actionDescription);
             voiceStatus.textContent = 'Команда выполнена';
-
             // Очистка статуса через 2 секунды
             setTimeout(() => {
                 if (!isListening) {
@@ -1111,12 +1100,10 @@ if (micButton) {
                 }
             }, 2000);
         }
-
     } catch (error) {
         console.error('Ошибка при отправке аудио или получении ответа:', error);
         voiceStatus.textContent = 'Ошибка при обработке команды';
         addToHistory(`Ошибка голосового ввода: ${error.message}`);
-
         setTimeout(() => {
             if (!isListening) {
                 voiceStatus.textContent = '';
@@ -1124,7 +1111,6 @@ if (micButton) {
         }, 3000);
     }
 };
-
                 // Запускаем запись
                 mediaRecorder.start();
                 let seconds = 0;
@@ -1136,9 +1122,7 @@ if (micButton) {
                         clearInterval(recordingInterval);
                     }
                 }, 1000);
-
                 startFrequencySimulation();
-
             } else {
                 isListening = false;
                 micButton.classList.remove('listening');
