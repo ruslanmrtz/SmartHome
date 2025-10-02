@@ -1,6 +1,8 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Body
 from fastapi.responses import JSONResponse, FileResponse
 import logging
+from fastapi.staticfiles import StaticFiles # <-- Добавьте этот импорт
+
 
 from weather import get_weather
 from whisper import get_text_from_audio
@@ -9,16 +11,21 @@ from text_classification import classify_text
 # Импорт работы с базой
 from db import add_scenario, get_all_scenarios, get_scenario_by_name, delete_scenario
 
+
+
 app = FastAPI(
     title="Audio to Text API (Stub)",
     description="принимает аудио, возвращает текст.",
     version="0.1.0"
 )
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
 
 @app.get("/site")
 async def read_index():
-    return FileResponse("index_new.html")
+    return FileResponse("index.html")
 
 
 @app.get("/weather")

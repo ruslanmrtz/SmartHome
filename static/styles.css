@@ -1,0 +1,638 @@
+body {
+  background: #f3f7fb;
+  transition: background 0.5s ease;
+}
+body.night {
+  background: #0b1220;
+}
+.room {
+  position: relative;
+  z-index: 0;
+}
+.window {
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+}
+/* Городской пейзаж */
+.city-scape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+  z-index: 0;
+}
+/* Солнце */
+.sun {
+  position: absolute;
+  left: 70%;
+  top: 20%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #fff59d, #ffcc33 40%, transparent 60%);
+  box-shadow: 0 0 40px 5px rgba(255, 204, 51, 0.4);
+  z-index: 2;
+  transition: opacity 1s ease;
+}
+/* Здания */
+.building {
+  position: absolute;
+  bottom: 0;
+  background: #888;
+  border: 1px solid #666;
+}
+.building-1 {
+  left: 10%;
+  width: 60px;
+  height: 100px;
+  background: linear-gradient(to right, #777, #999);
+}
+.building-2 {
+  left: 25%;
+  width: 80px;
+  height: 140px;
+  background: linear-gradient(to right, #666, #888);
+}
+.building-3 {
+  left: 50%;
+  width: 50px;
+  height: 80px;
+  background: linear-gradient(to right, #888, #aaa);
+}
+/* Окна на зданиях */
+.window-light {
+  position: absolute;
+  background: #ffeb3b;
+  border: 1px solid #ffc107;
+}
+/* Окна на первом здании */
+.building-1 .window-light:nth-child(1) {
+  top: 20px;
+  left: 10px;
+  width: 10px;
+  height: 15px;
+}
+.building-1 .window-light:nth-child(2) {
+  top: 20px;
+  right: 10px;
+  width: 10px;
+  height: 15px;
+}
+.building-1 .window-light:nth-child(3) {
+  top: 50px;
+  left: 10px;
+  width: 10px;
+  height: 15px;
+}
+.building-1 .window-light:nth-child(4) {
+  top: 50px;
+  right: 10px;
+  width: 10px;
+  height: 15px;
+}
+/* Окна на втором здании */
+.building-2 .window-light:nth-child(1) {
+  top: 20px;
+  left: 15px;
+  width: 12px;
+  height: 18px;
+}
+.building-2 .window-light:nth-child(2) {
+  top: 20px;
+  right: 15px;
+  width: 12px;
+  height: 18px;
+}
+.building-2 .window-light:nth-child(3) {
+  top: 50px;
+  left: 15px;
+  width: 12px;
+  height: 18px;
+}
+.building-2 .window-light:nth-child(4) {
+  top: 50px;
+  right: 15px;
+  width: 12px;
+  height: 18px;
+}
+.building-2 .window-light:nth-child(5) {
+  top: 80px;
+  left: 15px;
+  width: 12px;
+  height: 18px;
+}
+.building-2 .window-light:nth-child(6) {
+  top: 80px;
+  right: 15px;
+  width: 12px;
+  height: 18px;
+}
+/* Окна на третьем здании */
+.building-3 .window-light:nth-child(1) {
+  top: 15px;
+  left: 8px;
+  width: 8px;
+  height: 12px;
+}
+.building-3 .window-light:nth-child(2) {
+  top: 15px;
+  right: 8px;
+  width: 8px;
+  height: 12px;
+}
+.building-3 .window-light:nth-child(3) {
+  top: 40px;
+  left: 8px;
+  width: 8px;
+  height: 12px;
+}
+.building-3 .window-light:nth-child(4) {
+  top: 40px;
+  right: 8px;
+  width: 8px;
+  height: 12px;
+}
+.curtain {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(180deg, #b55 0%, #811 100%);
+  box-shadow: inset -6px 0 16px rgba(0,0,0,0.25);
+  transition: transform 1s cubic-bezier(.22,.9,.34,1);
+  z-index: 3;
+}
+.curtain.left {
+  left: 0;
+  transform: translateX(0);
+  transform-origin: left;
+}
+.curtain.right {
+  right: 0;
+  transform: translateX(0);
+  transform-origin: right;
+}
+.curtain.open-left {
+  transform: translateX(-110%);
+}
+.curtain.open-right {
+  transform: translateX(110%);
+}
+/* Стили для люстры */
+.chandelier {
+  position: absolute;
+  top: 0;
+  left: 60%; /* Переместили правее */
+  transform: translateX(-50%);
+  width: 200px;
+  height: 100px;
+  z-index: 25;
+}
+.chandelier-chain {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 20px;
+  background: #555;
+}
+.chandelier-base {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 12px;
+  background: linear-gradient(to bottom, #444, #222);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+/* Улучшенная люстра */
+.chandelier-body {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 50px;
+  background: radial-gradient(ellipse at center, #333 0%, #111 100%);
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+}
+/* Декоративные элементы люстры */
+.chandelier-decor {
+  position: absolute;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 8px;
+  background: linear-gradient(to right, transparent, #666, transparent);
+  border-radius: 4px;
+}
+.chandelier-arm {
+  position: absolute;
+  top: 50px;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #555, #333);
+  border-radius: 2px;
+}
+.chandelier-arm.left {
+  left: 20px;
+  transform: rotate(-35deg);
+  transform-origin: left top;
+}
+.chandelier-arm.right {
+  right: 20px;
+  transform: rotate(35deg);
+  transform-origin: right top;
+}
+.chandelier-holder {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  background: linear-gradient(to bottom, #666, #444);
+  border-radius: 0 0 4px 4px;
+}
+.chandelier-holder.left {
+  top: 55px;
+  left: 10px;
+  transform: rotate(-35deg);
+}
+.chandelier-holder.right {
+  top: 55px;
+  right: 10px;
+  transform: rotate(35deg);
+}
+.chandelier-holder.center {
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.chandelier-chain-small {
+  position: absolute;
+  width: 1px;
+  background: #777;
+}
+.chandelier-chain-small.left {
+  top: 55px;
+  left: 14px;
+  height: 12px;
+  transform: rotate(-35deg);
+}
+.chandelier-chain-small.right {
+  top: 55px;
+  right: 14px;
+  height: 12px;
+  transform: rotate(35deg);
+}
+.chandelier-chain-small.center {
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 15px;
+}
+.chandelier-bulb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2f2f2f;
+  box-shadow: inset -4px -4px 8px rgba(255,255,255,0.03);
+  transition: all 450ms ease;
+  z-index: 30;
+  /* --- ИСПРАВЛЕНИЕ 1: transform-origin для масштабирования --- */
+  transform-origin: center center;
+}
+.chandelier-bulb.left {
+  top: 65px;
+  left: 12px;
+}
+.chandelier-bulb.right {
+  top: 65px;
+  right: 11px;
+}
+.chandelier-bulb.center {
+  top: 78px;
+  left: 50%;
+  transform: translateX(-50%); /* Центрирует элемент по горизонтали */
+}
+.chandelier-bulb.on {
+  background: radial-gradient(circle at 35% 30%, #fff9d6, #ffd54d 40%, #ffb300 60%);
+  box-shadow: 0 0 25px 5px rgba(255,200,60,0.3);
+  /* --- ИСПРАВЛЕНИЕ 2: transform для .on, учитывая центрирование .center --- */
+  /* transform: scale(1.1); для .left и .right */
+  /* transform: translateX(-50%) scale(1.1); для .center - переопределяем ниже */
+}
+.chandelier-bulb.center.on {
+  transform: translateX(-50%) scale(1.1); /* Центрируем и масштабируем, не смещая центр */
+}
+/* --- ИСПРАВЛЕНИЕ 3: Правильное позиционирование и центрирование свечений --- */
+.chandelier-glow {
+  position: absolute;
+  width: 100px; /* Базовая ширина */
+  height: 100px; /* Базовая высота */
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(15px);
+  transition: opacity 400ms ease;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, rgba(255,235,140,0.8), rgba(255,200,60,0.1) 60%);
+  z-index: 24;
+  /* --- Общий transform для центрирования --- */
+  transform: translate(-50%, -50%);
+}
+.chandelier-glow.left {
+  /* --- Центр лампочки .left: top 65 + 10 = 75px, left 12 + 10 = 22px --- */
+  top: 75px;
+  left: 22px;
+}
+.chandelier-glow.right {
+  /* --- Центр лампочки .right: top 65 + 10 = 75px, left 200 - 11 - 10 = 179px --- */
+  top: 75px;
+  left: 179px;
+}
+.chandelier-glow.center {
+  /* --- Центр лампочки .center: top 78 + 10 = 88px, left 50% --- */
+  top: 88px;
+  left: 50%;
+}
+.chandelier-glow.on {
+  opacity: 1;
+  /* --- Размеры изменяются в .on, центрирование остается --- */
+  width: 220px;
+  height: 120px;
+  /* filter: blur(20px); уже в .center.on, но применим ко всем .on для единообразия */
+  filter: blur(20px);
+}
+/* Убираем старый стиль для .center.on, так как размеры теперь в .on */
+.chandelier-glow.center.on {
+  /* width, height, filter уже определены в .chandelier-glow.on */
+  /* transform: translate(-50%, -50%); наследуется */
+}
+.tv-container {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 256px;
+    height: 144px;
+    z-index: 15;
+}
+.tv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+}
+.tv-off {
+  background: linear-gradient(180deg,#2b2b2b,#111);
+  color: #8a8a8a;
+}
+.tv-on {
+  background: linear-gradient(180deg,#0b3 10%, #036 90%);
+  color: white;
+}
+.tv-screen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+.tv-on .tv-screen {
+  display: block;
+}
+.tv-on .screen-text {
+  display: none;
+}
+.tv-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 10px solid #000;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+.tv-stand {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 350px;
+  height: 53px;
+  background: linear-gradient(180deg, #8B4513, #A0522D, #8B4513);
+  border-radius: 8px;
+  z-index: 1;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+.tv-stand-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(180deg, #5D2906, #7B3F09);
+    border-radius: 8px 8px 0 0;
+    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2);
+}
+.tv-stand-boards {
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    right: 5px;
+    height: 26px;
+    display: flex;
+    justify-content: space-between;
+}
+.tv-stand-board {
+    width: calc(33% - 4px);
+    height: 100%;
+    background: linear-gradient(180deg, #7B3F09, #5D2906);
+    border-radius: 2px;
+}
+.tv-stand-base {
+    position: absolute;
+    top: 30px;
+    left: 15px;
+    right: 15px;
+    bottom: 10px;
+    background: linear-gradient(180deg, #A0522D, #CD853F);
+    border-radius: 4px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+}
+.digital-clock {
+  position: absolute;
+  top: -35px;
+  right: 30px;
+  width: 100px;
+  height: 50px;
+  background: #111;
+  border-radius: 6px;
+  border: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+.time-display {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0f0;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+  letter-spacing: 1px;
+}
+/* Стили для вкладок */
+.tab-buttons {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+  width: 100%; /* Исправлено: ширина теперь соответствует контейнеру */
+}
+.tab-button {
+  flex: 1;
+  padding: 0.5rem;
+  background-color: #f3f4f6;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.tab-button.active {
+  background-color: white;
+  font-weight: 600;
+  border-bottom: 2px solid #3b82f6;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+/* Стили для кнопки микрофона */
+.mic-button {
+  width: 150px; /* Увеличение ширины в 1.5 раза */
+  height: 150px; /* Увеличение высоты в 1.5 раза */
+  background-color: #e5e7eb;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 2rem auto;
+  position: relative;
+}
+.mic-button:hover {
+  background-color: #d1d5db;
+}
+.mic-button:active, .mic-button.listening {
+  background-color: #9ca3af;
+  transform: scale(0.98);
+}
+.mic-icon {
+  width: 40px;
+  height: 40px;
+  fill: #4b5563;
+}
+/* Анимация записи */
+.recording-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 12px;
+  height: 12px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  display: none;
+}
+.mic-button.listening .recording-dot {
+  display: block;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+.frequency-bar {
+  height: 4px;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899);
+  border-radius: 2px;
+  margin: 10px 0;
+  width: 0%;
+  transition: width 0.1s ease;
+}
+/* Стили для сценариев */
+.scenario-section {
+  margin-top: 1rem;
+}
+.scenario-form {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  margin-bottom: 1rem;
+}
+.device-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+.scenario-list {
+  margin-top: 1rem;
+}
+.scenario-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.scenario-item button {
+  margin-left: 0.5rem;
+}
+@media (max-width: 768px) {
+  .room {
+    height: 360px;
+  }
+}
+/* Стили для заголовка сервиса */
+.service-title {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5rem; /* Увеличил размер шрифта */
+    font-weight: bold;
+    color: #333; /* Цвет текста */
+    z-index: 100; /* Высокий z-index, чтобы был поверх других элементов */
+    background-color: rgba(255, 255, 255, 0.8); /* Легкий фон для читаемости */
+    padding: 5px 10px; /* Небольшой отступ */
+    border-radius: 5px; /* Скругление углов */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень */
+}
+body.night .service-title {
+    color: #e0e0e0;
+    background-color: rgba(11, 18, 32, 0.8); /* Фон в темной теме */
+}

@@ -314,6 +314,8 @@
           box-shadow: inset -4px -4px 8px rgba(255,255,255,0.03);
           transition: all 450ms ease;
           z-index: 30;
+          /* --- ИСПРАВЛЕНИЕ 1: transform-origin для масштабирования --- */
+          transform-origin: center center;
         }
         .chandelier-bulb.left {
           top: 65px;
@@ -326,18 +328,23 @@
         .chandelier-bulb.center {
           top: 78px;
           left: 50%;
-          transform: translateX(-50%);
+          transform: translateX(-50%); /* Центрирует элемент по горизонтали */
         }
         .chandelier-bulb.on {
           background: radial-gradient(circle at 35% 30%, #fff9d6, #ffd54d 40%, #ffb300 60%);
           box-shadow: 0 0 25px 5px rgba(255,200,60,0.3);
-          transform: scale(1.1);
+          /* --- ИСПРАВЛЕНИЕ 2: transform для .on, учитывая центрирование .center --- */
+          /* transform: scale(1.1); для .left и .right */
+          /* transform: translateX(-50%) scale(1.1); для .center - переопределяем ниже */
         }
-        /* Свечения для лампочек */
+        .chandelier-bulb.center.on {
+          transform: translateX(-50%) scale(1.1); /* Центрируем и масштабируем, не смещая центр */
+        }
+        /* --- ИСПРАВЛЕНИЕ 3: Правильное позиционирование и центрирование свечений --- */
         .chandelier-glow {
           position: absolute;
-          width: 100px;
-          height: 100px;
+          width: 100px; /* Базовая ширина */
+          height: 100px; /* Базовая высота */
           border-radius: 50%;
           opacity: 0;
           filter: blur(15px);
@@ -345,27 +352,36 @@
           pointer-events: none;
           background: radial-gradient(circle at 50% 30%, rgba(255,235,140,0.8), rgba(255,200,60,0.1) 60%);
           z-index: 24;
-        }
-        .chandelier-glow.left {
-          top: 65px;
-          left: 12px;
+          /* --- Общий transform для центрирования --- */
           transform: translate(-50%, -50%);
         }
+        .chandelier-glow.left {
+          /* --- Центр лампочки .left: top 65 + 10 = 75px, left 12 + 10 = 22px --- */
+          top: 75px;
+          left: 22px;
+        }
         .chandelier-glow.right {
-          top: 65px;
-          right: 11px;
-          transform: translate(50%, -50%);
+          /* --- Центр лампочки .right: top 65 + 10 = 75px, left 200 - 11 - 10 = 179px --- */
+          top: 75px;
+          left: 179px;
         }
         .chandelier-glow.center {
-          top: 90px;
+          /* --- Центр лампочки .center: top 78 + 10 = 88px, left 50% --- */
+          top: 88px;
           left: 50%;
-          transform: translateX(-50%);
-          width: 220px;
-          height: 120px;
-          filter: blur(20px);
         }
         .chandelier-glow.on {
           opacity: 1;
+          /* --- Размеры изменяются в .on, центрирование остается --- */
+          width: 220px;
+          height: 120px;
+          /* filter: blur(20px); уже в .center.on, но применим ко всем .on для единообразия */
+          filter: blur(20px);
+        }
+        /* Убираем старый стиль для .center.on, так как размеры теперь в .on */
+        .chandelier-glow.center.on {
+          /* width, height, filter уже определены в .chandelier-glow.on */
+          /* transform: translate(-50%, -50%); наследуется */
         }
         .tv-container {
             position: absolute;
@@ -685,17 +701,19 @@
                         Вечер
                     </button>
                 </div>
-                <!-- Кнопка для открытия сценариев - теперь вкладка -->
-                <!-- <button id="btn-scenarios" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform mt-4">
-                  Сценарии
-                </button> -->
+                <!-- Новый раздел для запуска сценариев -->
+                <div class="scenario-section mt-4">
+                    <h3 class="text-lg font-medium mb-2">Запустить сценарий</h3>
+                    <div id="scenario-list-buttons" class="space-y-2">
+                        <!-- Элементы списка сценариев будут добавляться сюда -->
+                        <p class="text-gray-500 text-sm italic">Загрузка сценариев...</p>
+                    </div>
+                </div>
             </div>
-            <!-- Панель сценариев - теперь таб-контент -->
-            <!-- <div id="scenario-panel" class="scenario-section hidden"> -->
         </div>
         <div class="tab-content" id="tab-scenarios-content"> <!-- Новый таб-контент -->
             <div class="scenario-section">
-                <h3 class="text-lg font-medium mb-2">Сценарии</h3>
+                <h3 class="text-lg font-medium mb-2">Создать/Управление сценариями</h3>
                 <div class="scenario-form">
                     <input type="text" id="scenario-name" placeholder="Название сценария"
                            class="w-full p-2 mb-2 border rounded">
@@ -754,8 +772,8 @@
              class="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-2xl shadow-xl p-3 z-50 hidden w-48">
             <div class="text-center">
                 <div class="text-lg font-semibold">Сургут</div>
-                <div class="text-xl font-bold mt-1">Солнечно</div>
-                <div class="text-xl mt-1">+15°</div>
+                <div class="text-xl font-bold mt-1 capitalize">${conditions}</div>
+                <div class="text-xl mt-1">+${tempCelsius}°</div>
             </div>
         </div>
         <div class="flex items-start gap-6">
@@ -1346,27 +1364,26 @@ if (micButton) {
     clockInterval = setInterval(updateClock, 1000);
     // Изначально шторы открыты
     updateUI();
-
-
     // --- Работа со сценариями через API ---
-    const scenarioList = document.getElementById('scenario-list');
+    const scenarioList = document.getElementById('scenario-list'); // Список в вкладке "Сценарии"
+    const scenarioListButtons = document.getElementById('scenario-list-buttons'); // Список в вкладке "Кнопки"
     const saveScenarioBtn = document.getElementById('save-scenario');
-
     // Загрузка сценариев с сервера
     async function loadScenarios() {
         try {
             const response = await fetch('/scenarios');
             if (!response.ok) throw new Error("Ошибка загрузки сценариев");
             const scenarios = await response.json();
-            renderScenarioList(scenarios);
+            renderScenarioList(scenarios); // Для вкладки "Сценарии"
+            renderScenarioListButtons(scenarios); // Для вкладки "Кнопки"
             return scenarios;
         } catch (error) {
             console.error(error);
             scenarioList.innerHTML = '<p class="text-red-500 text-sm">Ошибка загрузки сценариев</p>';
+            scenarioListButtons.innerHTML = '<p class="text-red-500 text-sm">Ошибка загрузки сценариев</p>';
             return [];
         }
     }
-
     // Сохранение сценария на сервере
     async function saveScenario(name, actions) {
         try {
@@ -1376,14 +1393,13 @@ if (micButton) {
                 body: JSON.stringify({ name, actions })
             });
             if (!response.ok) throw new Error("Ошибка сохранения сценария");
-            await loadScenarios();
+            await loadScenarios(); // Перезагружаем после сохранения
             addToHistory(`Сценарий "${name}" сохранён`);
         } catch (error) {
             console.error(error);
             alert("Не удалось сохранить сценарий");
         }
     }
-
     // Удаление сценария
     async function deleteScenario(name) {
         try {
@@ -1391,15 +1407,14 @@ if (micButton) {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error("Ошибка удаления сценария");
-            await loadScenarios();
+            await loadScenarios(); // Перезагружаем после удаления
             addToHistory(`Сценарий "${name}" удалён`);
         } catch (error) {
             console.error(error);
             alert("Не удалось удалить сценарий");
         }
     }
-
-    // Отображение списка сценариев
+    // Отображение списка сценариев (для вкладки "Сценарии") - теперь без кнопок запуска
     function renderScenarioList(scenarios) {
         scenarioList.innerHTML = '<h4 class="text-md font-medium mb-1">Сохранённые сценарии</h4>';
         if (scenarios.length === 0) {
@@ -1411,20 +1426,32 @@ if (micButton) {
             div.className = 'scenario-item';
             div.innerHTML = `
                 <span>${scenario.name}</span>
-                <button onclick="runScenario('${scenario.name}')" class="bg-green-500 text-white px-2 py-1 rounded text-xs">Запустить</button>
                 <button onclick="deleteScenario('${scenario.name}')" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Удалить</button>
             `;
             scenarioList.appendChild(div);
         });
     }
-
+    // Отображение списка сценариев (для вкладки "Кнопки")
+    function renderScenarioListButtons(scenarios) {
+        scenarioListButtons.innerHTML = '';
+        if (scenarios.length === 0) {
+            scenarioListButtons.innerHTML = '<p class="text-gray-500 text-sm italic">Нет доступных сценариев</p>';
+            return;
+        }
+        scenarios.forEach((scenario) => {
+            const button = document.createElement('button');
+            button.className = 'w-full py-2 rounded-lg bg-purple-500 text-white hover:opacity-90';
+            button.textContent = `Запустить: ${scenario.name}`;
+            button.addEventListener('click', () => runScenario(scenario.name));
+            scenarioListButtons.appendChild(button);
+        });
+    }
     // Запуск сценария (запрос по имени)
     async function runScenario(name) {
         try {
             const response = await fetch(`/scenarios/${encodeURIComponent(name)}`);
             if (!response.ok) throw new Error("Ошибка запуска сценария");
             const scenario = await response.json();
-
             // Применение сценария
             if (scenario.actions.curtains === 'open') { curtainsOpen = true; }
             if (scenario.actions.curtains === 'close') { curtainsOpen = false; }
@@ -1434,14 +1461,12 @@ if (micButton) {
             if (scenario.actions.tv === 'off') { tvOn = false; }
             if (scenario.actions.clock === 'on' && !clockOn) toggleClock();
             if (scenario.actions.clock === 'off' && clockOn) toggleClock();
-
             if (scenario.actions.weather === 'show') {
                 weatherPanel.classList.remove('hidden');
                 setTimeout(() => weatherPanel.classList.add('hidden'), 5000);
             } else if (scenario.actions.weather === 'hide') {
                 weatherPanel.classList.add('hidden');
             }
-
             updateUI();
             addToHistory(`Сценарий "${name}" запущен`);
         } catch (error) {
@@ -1449,7 +1474,6 @@ if (micButton) {
             alert("Не удалось запустить сценарий");
         }
     }
-
     // Обработчик кнопки "Сохранить"
     saveScenarioBtn.addEventListener('click', () => {
         const nameInput = document.getElementById('scenario-name');
@@ -1468,10 +1492,8 @@ if (micButton) {
         saveScenario(name, actions);
         nameInput.value = '';
     });
-
     // При загрузке страницы подтягиваем сценарии с сервера
     loadScenarios();
 </script>
-
 </body>
 </html>

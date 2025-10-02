@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Умный дом</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <!-- Добавлен заголовок сервиса -->
+    <div class="service-title">ДомоВойс</div>
+<div class="w-full max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-6">
+    <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
+        <h2 class="text-xl font-semibold mb-3">Smart Home Controls</h2>
+        <!-- Вкладки (поменяли местами) -->
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="voice">Голосовой ввод</button>
+            <button class="tab-button" data-tab="buttons">Кнопки</button>
+            <button class="tab-button" data-tab="scenarios">Сценарии</button> <!-- Новая вкладка -->
+        </div>
+        <!-- Содержимое вкладок -->
+        <div class="tab-content active" id="tab-voice-content">
+            <div class="flex flex-col items-center">
+                <div id="mic-button" class="mic-button">
+                    <div class="recording-dot"></div>
+                    <svg class="mic-icon" viewBox="0 0 24 24">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.42 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.3 6-6.72h-1.7z"/>
+                    </svg>
+                </div>
+                <p class="text-gray-500 text-sm mt-2">Нажмите для записи</p>
+                <div id="voice-status" class="text-sm mt-2 text-center h-6"></div>
+                <!-- Полоска частот -->
+                <div id="frequency-bar" class="frequency-bar w-full max-w-xs"></div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-buttons-content">
+            <div class="space-y-3">
+                <button id="btn-curtains" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+                    Закрыть шторы
+                </button>
+                <button id="btn-lights" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+                    Включить свет
+                </button>
+                <button id="btn-tv" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+                    Включить ТВ
+                </button>
+                <!-- Кнопка для выключения часов -->
+                <button id="btn-clock" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+                    Выключить часы
+                </button>
+                <!-- Кнопка для отображения погоды -->
+                <button id="btn-weather" class="w-full py-2 rounded-lg border hover:scale-[1.01] transition-transform">
+                    Показать погоду
+                </button>
+                <div class="flex gap-2 mt-2">
+                    <button id="btn-morning" class="flex-1 py-2 rounded-lg bg-yellow-400 hover:opacity-90">
+                        Утро
+                    </button>
+                    <button id="btn-evening" class="flex-1 py-2 rounded-lg bg-indigo-600 text-white hover:opacity-90">
+                        Вечер
+                    </button>
+                </div>
+                <!-- Новый раздел для запуска сценариев -->
+                <div class="scenario-section mt-4">
+                    <h3 class="text-lg font-medium mb-2">Запустить сценарий</h3>
+                    <div id="scenario-list-buttons" class="space-y-2">
+                        <!-- Элементы списка сценариев будут добавляться сюда -->
+                        <p class="text-gray-500 text-sm italic">Загрузка сценариев...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-scenarios-content"> <!-- Новый таб-контент -->
+            <div class="scenario-section">
+                <h3 class="text-lg font-medium mb-2">Создать/Управление сценариями</h3>
+                <div class="scenario-form">
+                    <input type="text" id="scenario-name" placeholder="Название сценария"
+                           class="w-full p-2 mb-2 border rounded">
+                    <div class="space-y-2 mb-2">
+                        <div class="device-option">
+                            <label>Шторы</label>
+                            <select id="device-curtains" class="border rounded p-1">
+                                <option value="open">Открыть</option>
+                                <option value="close">Закрыть</option>
+                            </select>
+                        </div>
+                        <div class="device-option">
+                            <label>Свет</label>
+                            <select id="device-lights" class="border rounded p-1">
+                                <option value="on">Включить</option>
+                                <option value="off">Выключить</option>
+                            </select>
+                        </div>
+                        <div class="device-option">
+                            <label>ТВ</label>
+                            <select id="device-tv" class="border rounded p-1">
+                                <option value="on">Включить</option>
+                                <option value="off">Выключить</option>
+                            </select>
+                        </div>
+                        <div class="device-option">
+                            <label>Часы</label>
+                            <select id="device-clock" class="border rounded p-1">
+                                <option value="on">Включить</option>
+                                <option value="off">Выключить</option>
+                            </select>
+                        </div>
+                        <div class="device-option">
+                            <label>Погода</label>
+                            <select id="device-weather" class="border rounded p-1">
+                                <option value="show">Показать</option>
+                                <option value="hide">Скрыть</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="save-scenario" class="w-full py-2 bg-blue-500 text-white rounded-lg hover:opacity-90">
+                        Сохранить
+                    </button>
+                </div>
+                <!-- Список сценариев -->
+                <div id="scenario-list" class="scenario-list">
+                    <h4 class="text-md font-medium mb-1">Сохранённые сценарии</h4>
+                    <!-- Элементы списка будут добавляться сюда -->
+                </div>
+            </div>
+        </div>
+    </aside>
+    <main class="md:col-span-2 bg-gradient-to-b from-white/60 to-transparent rounded-2xl p-6 relative overflow-hidden shadow-xl">
+        <!-- Панель погоды -->
+        <div id="weather-panel"
+             class="absolute top-4 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur rounded-2xl shadow-xl p-3 z-50 hidden w-48">
+            <div class="text-center">
+                <div class="text-lg font-semibold">Сургут</div>
+                <div class="text-xl font-bold mt-1 capitalize">${conditions}</div>
+                <div class="text-xl mt-1">+${tempCelsius}°</div>
+            </div>
+        </div>
+        <div class="flex items-start gap-6">
+            <div class="flex-1">
+                <div id="room"
+                     class="room relative rounded-xl p-6 h-[420px] transition-all duration-700 bg-[#eaf2ff] text-black">
+                    <!-- Окно с городским пейзажем -->
+                    <div class="window absolute left-12 top-12 w-72 h-52 bg-gradient-to-b from-sky-200 to-white rounded-lg shadow-inner overflow-hidden">
+                        <!-- Городской пейзаж -->
+                        <div class="city-scape">
+                            <div class="sun"></div>
+                            <div class="building building-1">
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                            </div>
+                            <div class="building building-2">
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                            </div>
+                            <div class="building building-3">
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                                <div class="window-light"></div>
+                            </div>
+                        </div>
+                        <div class="curtain left open-left"></div>
+                        <div class="curtain right open-right"></div>
+                    </div>
+                    <!-- Люстра -->
+                    <div class="chandelier">
+                        <div class="chandelier-chain"></div>
+                        <div class="chandelier-base"></div>
+                        <div class="chandelier-body"></div>
+                        <div class="chandelier-decor"></div>
+                        <div class="chandelier-arm left"></div>
+                        <div class="chandelier-arm right"></div>
+                        <div class="chandelier-holder left"></div>
+                        <div class="chandelier-holder right"></div>
+                        <div class="chandelier-holder center"></div>
+                        <div class="chandelier-chain-small left"></div>
+                        <div class="chandelier-chain-small right"></div>
+                        <div class="chandelier-chain-small center"></div>
+                        <div class="chandelier-bulb left"></div>
+                        <div class="chandelier-bulb right"></div>
+                        <div class="chandelier-bulb center"></div>
+                        <!-- Свечения для всех лампочек -->
+                        <div class="chandelier-glow left"></div>
+                        <div class="chandelier-glow right"></div>
+                        <div class="chandelier-glow center"></div>
+                    </div>
+                    <div class="tv-container">
+                        <div class="tv tv-off">
+                            <div class="tv-frame"></div>
+                            <img src="https://cdn.maximonline.ru/91/26/c4/9126c445ee6e097754b5fdf471e47874/416x257_0xac120005_2938080411529046295.gif    "
+                                 alt="TV Screen" class="tv-screen">
+                            <div class="screen-text flex items-center justify-center text-sm font-medium h-full">ТВ —
+                                выкл.
+                            </div>
+                        </div>
+                        <div class="tv-stand">
+                            <div class="tv-stand-top">
+                                <div class="tv-stand-boards">
+                                    <div class="tv-stand-board"></div>
+                                    <div class="tv-stand-board"></div>
+                                    <div class="tv-stand-board"></div>
+                                </div>
+                            </div>
+                            <div class="tv-stand-base"></div>
+                            <!-- Цифровые часы справа на столике -->
+                            <div class="digital-clock">
+                                <div class="time-display" id="time-display">00:00:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-2">
+                    <div id="status-curtains" class="p-3 rounded-lg bg-white/70 dark:bg-gray-800/60">Шторы: Открыты
+                    </div>
+                    <div id="status-lights" class="p-3 rounded-lg bg-white/70 dark:bg-gray-800/60">Свет: Выключен</div>
+                    <div id="status-tv" class="p-3 rounded-lg bg-white/70 dark:bg-gray-800/60">ТВ: Выкл.</div>
+                    <div id="status-clock" class="p-3 rounded-lg bg-white/70 dark:bg-gray-800/60">Часы: Работают</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <aside class="md:col-span-1 bg-white/80 dark:bg-gray-900/60 backdrop-blur rounded-2xl p-5 shadow-lg">
+        <h2 class="text-xl font-semibold mb-3">История запросов</h2>
+        <ul id="history-list" class="space-y-2 h-[500px] overflow-y-auto"> <!-- Изменена высота -->
+            <!-- Записи истории будут добавляться сюда -->
+            <li class="text-gray-500 text-sm italic">История пуста</li>
+        </ul>
+    </aside>
+</div>
+<script src="/static/script.js"></script>
+</body>
+</html>
