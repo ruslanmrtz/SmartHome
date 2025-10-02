@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, JSON, select
+from sqlalchemy import create_engine, Column, Integer, String, JSON, select, delete
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -58,5 +58,21 @@ def get_scenario_by_name(name: str):
             select(Scenario).where(Scenario.name == name)
         ).scalar_one_or_none()
         return scenario
+    finally:
+        session.close()
+
+
+def delete_scenario(name: str) -> bool:
+    """Удалить сценарий по названию"""
+    session = SessionLocal()
+    try:
+        stmt = delete(Scenario).where(Scenario.name == name)
+        result = session.execute(stmt)
+        session.commit()
+        # Возвращаем True, если хотя бы одна запись была удалена
+        return result.rowcount > 0
+    except Exception as e:
+        session.rollback()
+        raise e
     finally:
         session.close()

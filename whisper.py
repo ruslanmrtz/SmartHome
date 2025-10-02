@@ -20,7 +20,7 @@ logger.error(f"Используемое устройство: {device}, dtype: {
 processor = AutoProcessor.from_pretrained("openai/whisper-large-v3-turbo")
 model = WhisperForConditionalGeneration.from_pretrained(
     "openai/whisper-large-v3-turbo",
-    torch_dtype=dtype,
+    dtype=dtype,
     low_cpu_mem_usage=True
 )
 model.to(device)

@@ -1346,21 +1346,59 @@ if (micButton) {
     clockInterval = setInterval(updateClock, 1000);
     // Изначально шторы открыты
     updateUI();
-    // --- Новая логика для сценариев ---
-    // const btnScenarios = $('#btn-scenarios'); // Эта строка больше не нужна
-    // const scenarioPanel = $('#scenario-panel'); // Эта строка больше не нужна
-    const scenarioList = $('#scenario-list');
-    const saveScenarioBtn = $('#save-scenario');
-    // Загрузка сценариев из localStorage
-    function loadScenarios() {
-        const scenarios = JSON.parse(localStorage.getItem('smartHomeScenarios') || '[]');
-        renderScenarioList(scenarios);
-        return scenarios;
+
+
+    // --- Работа со сценариями через API ---
+    const scenarioList = document.getElementById('scenario-list');
+    const saveScenarioBtn = document.getElementById('save-scenario');
+
+    // Загрузка сценариев с сервера
+    async function loadScenarios() {
+        try {
+            const response = await fetch('/scenarios');
+            if (!response.ok) throw new Error("Ошибка загрузки сценариев");
+            const scenarios = await response.json();
+            renderScenarioList(scenarios);
+            return scenarios;
+        } catch (error) {
+            console.error(error);
+            scenarioList.innerHTML = '<p class="text-red-500 text-sm">Ошибка загрузки сценариев</p>';
+            return [];
+        }
     }
-    // Сохранение сценариев в localStorage
-    function saveScenarios(scenarios) {
-        localStorage.setItem('smartHomeScenarios', JSON.stringify(scenarios));
+
+    // Сохранение сценария на сервере
+    async function saveScenario(name, actions) {
+        try {
+            const response = await fetch('/scenarios', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, actions })
+            });
+            if (!response.ok) throw new Error("Ошибка сохранения сценария");
+            await loadScenarios();
+            addToHistory(`Сценарий "${name}" сохранён`);
+        } catch (error) {
+            console.error(error);
+            alert("Не удалось сохранить сценарий");
+        }
     }
+
+    // Удаление сценария
+    async function deleteScenario(name) {
+        try {
+            const response = await fetch(`/scenarios/${encodeURIComponent(name)}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error("Ошибка удаления сценария");
+            await loadScenarios();
+            addToHistory(`Сценарий "${name}" удалён`);
+        } catch (error) {
+            console.error(error);
+            alert("Не удалось удалить сценарий");
+        }
+    }
+
     // Отображение списка сценариев
     function renderScenarioList(scenarios) {
         scenarioList.innerHTML = '<h4 class="text-md font-medium mb-1">Сохранённые сценарии</h4>';
@@ -1368,101 +1406,72 @@ if (micButton) {
             scenarioList.innerHTML += '<p class="text-gray-500 text-sm italic">Сценарии отсутствуют</p>';
             return;
         }
-        scenarios.forEach((scenario, index) => {
+        scenarios.forEach((scenario) => {
             const div = document.createElement('div');
             div.className = 'scenario-item';
             div.innerHTML = `
                 <span>${scenario.name}</span>
-                <button onclick="runScenario(${index})" class="bg-green-500 text-white px-2 py-1 rounded text-xs">Запустить</button>
-                <button onclick="deleteScenario(${index})" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Удалить</button>
+                <button onclick="runScenario('${scenario.name}')" class="bg-green-500 text-white px-2 py-1 rounded text-xs">Запустить</button>
+                <button onclick="deleteScenario('${scenario.name}')" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Удалить</button>
             `;
             scenarioList.appendChild(div);
         });
     }
-    // Функция запуска сценария
-    function runScenario(index) {
-        const scenarios = loadScenarios();
-        const scenario = scenarios[index];
-        if (scenario) {
-            // Применяем изменения из сценария
-            if (scenario.actions.curtains === 'open') {
-                curtainsOpen = true;
-                playSound('/sounds/curtain-open.mp3');
-            } else if (scenario.actions.curtains === 'close') {
-                curtainsOpen = false;
-                playSound('/sounds/curtain-close.mp3');
-            }
-            if (scenario.actions.lights === 'on') {
-                lightsOn = true;
-                playSound('/sounds/switch.mp3');
-            } else if (scenario.actions.lights === 'off') {
-                lightsOn = false;
-                playSound('/sounds/switch.mp3');
-            }
-            if (scenario.actions.tv === 'on') {
-                tvOn = true;
-                playSound('/sounds/tv-toggle.mp3');
-            } else if (scenario.actions.tv === 'off') {
-                tvOn = false;
-                playSound('/sounds/tv-toggle.mp3');
-            }
-            if (scenario.actions.clock === 'on' && !clockOn) {
-                toggleClock();
-            } else if (scenario.actions.clock === 'off' && clockOn) {
-                toggleClock();
-            }
+
+    // Запуск сценария (запрос по имени)
+    async function runScenario(name) {
+        try {
+            const response = await fetch(`/scenarios/${encodeURIComponent(name)}`);
+            if (!response.ok) throw new Error("Ошибка запуска сценария");
+            const scenario = await response.json();
+
+            // Применение сценария
+            if (scenario.actions.curtains === 'open') { curtainsOpen = true; }
+            if (scenario.actions.curtains === 'close') { curtainsOpen = false; }
+            if (scenario.actions.lights === 'on') { lightsOn = true; }
+            if (scenario.actions.lights === 'off') { lightsOn = false; }
+            if (scenario.actions.tv === 'on') { tvOn = true; }
+            if (scenario.actions.tv === 'off') { tvOn = false; }
+            if (scenario.actions.clock === 'on' && !clockOn) toggleClock();
+            if (scenario.actions.clock === 'off' && clockOn) toggleClock();
+
             if (scenario.actions.weather === 'show') {
                 weatherPanel.classList.remove('hidden');
-                setTimeout(() => {
-                    weatherPanel.classList.add('hidden');
-                }, 5000);
+                setTimeout(() => weatherPanel.classList.add('hidden'), 5000);
             } else if (scenario.actions.weather === 'hide') {
                 weatherPanel.classList.add('hidden');
             }
-            // Обновляем UI
+
             updateUI();
-            // Добавляем в историю
-            addToHistory(`Сценарий "${scenario.name}" запущен`);
+            addToHistory(`Сценарий "${name}" запущен`);
+        } catch (error) {
+            console.error(error);
+            alert("Не удалось запустить сценарий");
         }
     }
-    // Функция удаления сценария
-    function deleteScenario(index) {
-        const scenarios = loadScenarios();
-        scenarios.splice(index, 1);
-        saveScenarios(scenarios);
-        renderScenarioList(scenarios);
-    }
-    // Обработчик для кнопки сохранения сценария
+
+    // Обработчик кнопки "Сохранить"
     saveScenarioBtn.addEventListener('click', () => {
-        const nameInput = $('#scenario-name');
+        const nameInput = document.getElementById('scenario-name');
         const name = nameInput.value.trim();
         if (!name) {
-            alert('Пожалуйста, введите название сценария.');
+            alert('Введите название сценария');
             return;
         }
         const actions = {
-            curtains: $('#device-curtains').value,
-            lights: $('#device-lights').value,
-            tv: $('#device-tv').value,
-            clock: $('#device-clock').value,
-            weather: $('#device-weather').value
+            curtains: document.getElementById('device-curtains').value,
+            lights: document.getElementById('device-lights').value,
+            tv: document.getElementById('device-tv').value,
+            clock: document.getElementById('device-clock').value,
+            weather: document.getElementById('device-weather').value
         };
-        const scenarios = loadScenarios();
-        scenarios.push({ name, actions });
-        saveScenarios(scenarios);
-        // Очищаем форму
+        saveScenario(name, actions);
         nameInput.value = '';
-        // Сбрасываем все select'ы
-        const selects = $$('#scenario-form select');
-        selects.forEach(select => select.value = 'on'); // Выбираем первый вариант
-        // Обновляем список
-        renderScenarioList(scenarios);
-        addToHistory(`Сценарий "${name}" создан`);
     });
-    // Инициализация истории
-    loadHistory();
-    // Инициализация сценариев
+
+    // При загрузке страницы подтягиваем сценарии с сервера
     loadScenarios();
 </script>
+
 </body>
 </html>
